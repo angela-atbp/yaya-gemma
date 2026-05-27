@@ -1,0 +1,33 @@
+# task Name: Structure and Redesign Campaign Page Reporting System
+
+## Project Overview
+Create two reporting & campaign creation mechanism for two types of email campaign: Broadcast Emails and Lifecycle Emails in the /campaign page. At their core, the difference comes down to who initiates the message: push or pull strategy.
+While both land in the same inbox, they serve completely different purposes, rely on different triggers, and require different measurement strategies.
+
+## Core difference
+*   **Broadcast Emails:** 
+  - Trigger: Time-based. Sent manually or scheduled by you to a specific list all at once.
+  - Audience: Broad segment. Mass audiences, though often filtered by traits (e.g., "All active subscribers").
+  - Content: Perishable. Focuses on current news, product updates, seasonal sales, or newsletters.
+  - Goal: Drive immediate spikes in traffic, revenue, or awareness.
+  - Average Open Rates: Typically lower (15–25%), as the timing might not match the user's current mindset. For Yaya Gemma, will use 15% as benchmark/kpi 
+*   **Lifecycle Emails:**  
+  - Trigger: Action-based. Triggered automatically by a user's behavior, milestone, or lack of action.
+  - Audience: Individual. Sent to exactly one person at the precise moment it becomes relevant to them.
+  - Content: Evergreen. The template stays the same; the system dynamically populates user-specific data.
+  - Goal: Guide the user to the next step of their journey, boosting retention and lifetime value (LTV).
+  - Average Open Rates: Significantly higher (40–60%+), because the user is actively engaged with your product. For Yaya Gemma, will use 40% as benchmark/kpi 
+
+
+## Core Features & User Stories
+
+- [ ] **Two separate sections for the two different type of campaign**
+  - [ ] Users can view all list of campaigns including their status (live|draft|archive) and performance.
+  - [ ]One-click drill down (including KPI) and edit capabilities.
+  - [ ] A "Create New" button that opens a Shadcn Dialog modal with a validated form.
+
+---
+
+## Implementation Rules & Constraints (CRITICAL)
+*   **No Placeholders:** Do not write `// TODO: implement later` comments. Write fully functional code.
+*   **Responsive Design:** Mobile-first approach. Ensure all tables collapse into cards or use horizontal scrolling on mobile screens.
