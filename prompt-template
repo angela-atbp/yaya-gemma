@@ -1,0 +1,51 @@
+# Project Name: [Insert App Name]
+
+## 1. Project Overview
+Provide a 2-3 sentence high-level summary of what this app does, who it is for, and the core value proposition.
+
+## 2. Core Tech Stack & Libraries
+*   **Frontend:** React, Vite, TypeScript
+*   **Styling:** Tailwind CSS, Shadcn UI (Lucide Icons for iconography)
+*   **State Management:** [e.g., React Context, Zustand, or simple useState]
+*   **Backend/Database (If applicable):** Supabase (PostgreSQL)
+
+---
+
+## 3. Core Features & User Stories
+*Use strict checklist format here so Lovable can track its progress.*
+
+- [ ] **Authentication (If needed)**
+  - [ ] Users can sign up/log in via email and password.
+  - [ ] Protected routes that redirect unauthenticated users to `/login`.
+- [ ] **Dashboard / Main View**
+  - [ ] A sidebar navigation containing [Home, Analytics, Settings].
+  - [ ] A main metric grid displaying 3 data cards (Total Users, Revenue, Conversion Rate).
+- [ ] **Data Management**
+  - [ ] A searchable, filterable table displaying user data.
+  - [ ] A "Create New" button that opens a Shadcn Dialog modal with a validated form.
+
+---
+
+## 4. Architecture & Page Structure
+Define the exact routes and components you want Lovable to create.
+
+*   `/` - Landing Page (Hero section, features grid, pricing tier, CTA button).
+*   `/login` - Clean, centered login card.
+*   `/dashboard` - Main application shell with sidebar layout.
+*   `/settings` - Profile edit form and theme toggle.
+
+---
+
+## 5. UI/UX & Design System
+*   **Theme:** Modern SaaS aesthetic. Default to a sleek Dark Mode (or provide a toggle).
+*   **Color Palette:** Primary: Indigo (`#4f46e5`), Secondary: Emerald (`#10b981`), Background: Slate (`#0f172a`).
+*   **Feedback Loops:** Every action (e.g., saving a form, deleting an item) must trigger a `sonner` toast notification showing success or error states.
+*   **Empty States:** If a table or list has no data, display a clean, centered empty-state illustration with a CTA button to "Add Data".
+
+---
+
+## 6. Implementation Rules & Constraints (CRITICAL)
+*   **Mock Data First:** Use comprehensive mock data inside a `mockData.ts` file before attempting live backend integrations.
+*   **Component Modularity:** Keep components small. If a file exceeds 250 lines, break it down into sub-components.
+*   **No Placeholders:** Do not write `// TODO: implement later` comments. Write fully functional code.
+*   **Responsive Design:** Mobile-first approach. Ensure all tables collapse into cards or use horizontal scrolling on mobile screens.
