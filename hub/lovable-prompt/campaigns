@@ -1,33 +1,357 @@
-# task Name: Structure and Redesign Campaign Page Reporting System
+Redesign the /campaigns page to show two distinct sections:
+Broadcast Emails and Lifecycle Emails, as described below.
+This requires a migration, a new server function, and a UI rebuild.
 
-## Project Overview
-Create two reporting & campaign creation mechanism for two types of email campaign: Broadcast Emails and Lifecycle Emails in the /campaign page. At their core, the difference comes down to who initiates the message: push or pull strategy.
-While both land in the same inbox, they serve completely different purposes, rely on different triggers, and require different measurement strategies.
+════════════════════════════════════════════════════════════════════
+PART A — MIGRATION (Hub Supabase)
+════════════════════════════════════════════════════════════════════
 
-## Core difference
-*   **Broadcast Emails:** 
-  - Trigger: Time-based. Sent manually or scheduled by you to a specific list all at once.
-  - Audience: Broad segment. Mass audiences, though often filtered by traits (e.g., "All active subscribers").
-  - Content: Perishable. Focuses on current news, product updates, seasonal sales, or newsletters.
-  - Goal: Drive immediate spikes in traffic, revenue, or awareness.
-  - Average Open Rates: Typically lower (15–25%), as the timing might not match the user's current mindset. For Yaya Gemma, will use 15% as benchmark/kpi 
-*   **Lifecycle Emails:**  
-  - Trigger: Action-based. Triggered automatically by a user's behavior, milestone, or lack of action.
-  - Audience: Individual. Sent to exactly one person at the precise moment it becomes relevant to them.
-  - Content: Evergreen. The template stays the same; the system dynamically populates user-specific data.
-  - Goal: Guide the user to the next step of their journey, boosting retention and lifetime value (LTV).
-  - Average Open Rates: Significantly higher (40–60%+), because the user is actively engaged with your product. For Yaya Gemma, will use 40% as benchmark/kpi 
+Create a new migration file in supabase/migrations/:
 
+-- 1. Add campaign_type to cep_campaigns
+ALTER TABLE public.cep_campaigns
+  ADD COLUMN IF NOT EXISTS campaign_type TEXT
+    NOT NULL DEFAULT 'broadcast'
+    CHECK (campaign_type IN ('broadcast', 'lifecycle'));
 
-## Core Features & User Stories
+-- 2. Mark all existing rows as broadcast (they all are)
+UPDATE public.cep_campaigns SET campaign_type = 'broadcast'
+  WHERE campaign_type IS NULL OR campaign_type = 'broadcast';
 
-- [ ] **Two separate sections for the two different type of campaign**
-  - [ ] Users can view all list of campaigns including their status (live|draft|archive) and performance.
-  - [ ]One-click drill down (including KPI) and edit capabilities.
-  - [ ] A "Create New" button that opens a Shadcn Dialog modal with a validated form.
+-- 3. Seed all 24 lifecycle email definitions as read-only
+--    reference rows (status='live', campaign_type='lifecycle').
+--    These rows are never sent via Hub — they are display records only.
+--    open_rate_benchmark and email_key are stored in description
+--    and subject_override fields (reusing existing columns).
 
----
+INSERT INTO public.cep_campaigns
+  (id, name, description, status, campaign_type, subject_override,
+   recipient_count, sent_count, open_count, click_count, failed_count,
+   created_by, created_at)
+SELECT
+  gen_random_uuid(),
+  lc.name,
+  lc.description,
+  'live'::public.campaign_status,
+  'lifecycle',
+  lc.email_key,   -- stored in subject_override as the lookup key
+  0, 0, 0, 0, 0,
+  (SELECT id FROM auth.users LIMIT 1),  -- placeholder creator
+  now()
+FROM (VALUES
+  ('d1_dinner_nudge',       'D1 Dinner Nudge',           'Sent day 1 after signup, 0 cooks. Trigger: daily cron.'),
+  ('d3_rescue_urgency',     'D3 Rescue Urgency',         'Sent day 3 if pantry has items expiring ≤3 days. Trigger: daily cron.'),
+  ('d3_pantry_waiting',     'D3 Pantry Waiting',         'Sent day 3 if no expiring items and 0 cooks. Trigger: daily cron.'),
+  ('d7_first_week',         'D7 First Week',             'Sent days 7–9 if ≥1 cook in first week. Trigger: daily cron.'),
+  ('never_cooked_d2',       'Never Cooked D2',           'Sent day 2 if onboarded and 0 cooks. Trigger: daily cron.'),
+  ('never_cooked_d5',       'Never Cooked D5',           'Sent day 5 if still 0 cooks. Trigger: daily cron.'),
+  ('never_cooked_d10',      'Never Cooked D10',          'Sent day 10 if still 0 cooks. Trigger: daily cron.'),
+  ('empty_pantry_d3',       'Empty Pantry D3',           'Sent day 3 if 0 pantry items. Trigger: daily cron.'),
+  ('onboarding_nudge_d1',   'Onboarding Nudge D1',       'Sent 23–25h after signup if onboarding incomplete. Trigger: daily cron.'),
+  ('pending_confirm_d1',    'Pending Confirm D1',        'Sent day 1 if email not confirmed. Trigger: daily cron. Auth-exempt.'),
+  ('pending_confirm_d3',    'Pending Confirm D3',        'Sent day 3 if still unconfirmed. Trigger: daily cron. Auth-exempt.'),
+  ('pending_confirm_d7',    'Pending Confirm D7',        'Sent day 7 if still unconfirmed. Last reminder. Trigger: daily cron.'),
+  ('reactivation_d14',      'Reactivation D14',          'Sent to users silent 14 days. Trigger: daily cron.'),
+  ('reactivation_d30',      'Reactivation D30',          'Sent to users silent 30 days. Trigger: daily cron.'),
+  ('beta_expiry_d14',       'Beta Expiry D14',           'Sent 14 days before full_access_until. Trigger: daily cron.'),
+  ('beta_expiry_d7',        'Beta Expiry D7',            'Sent 7 days before full_access_until. Trigger: daily cron.'),
+  ('beta_expiry_d1',        'Beta Expiry D1',            'Sent 1 day before full_access_until. Trigger: daily cron.'),
+  ('feature_substitution_w2','Feature: Substitution W2', 'Sent days 10–15 if substitution unused. Trigger: daily cron.'),
+  ('feature_grocery_w3',    'Feature: Grocery List W3',  'Sent days 17–22 if grocery list unused. Trigger: daily cron.'),
+  ('feature_mealplanner_w4','Feature: Meal Planner W4',  'Sent days 24–29 if meal planner unused. Trigger: daily cron.'),
+  ('first_cook_win',        'First Cook Win',            'Sent within 2h of first cook event. Trigger: every-2h cron.'),
+  ('advocate_d30_founder',  'Advocate D30 — Founder',   'Sent at day 30 to all active opted-in users. Trigger: daily cron.'),
+  ('weekly_pantry_checkin', 'Weekly Pantry Check-in',    'Sent weekly (Monday) to active users with ≥3 pantry items. Trigger: weekly cron.'),
+  ('seg2_welcome',          'Seg-E Welcome D0',          'Sent day 0 to landing-only newsletter subscribers. Trigger: daily cron.')
+) AS lc(email_key, name, description)
+ON CONFLICT DO NOTHING;
 
-## Implementation Rules & Constraints (CRITICAL)
-*   **No Placeholders:** Do not write `// TODO: implement later` comments. Write fully functional code.
-*   **Responsive Design:** Mobile-first approach. Ensure all tables collapse into cards or use horizontal scrolling on mobile screens.
+-- 4. Add a status value 'live' for lifecycle campaigns
+--    (they are always running, never draft/sent/archived)
+ALTER TYPE public.campaign_status ADD VALUE IF NOT EXISTS 'live';
+
+-- 5. Index for the new column
+CREATE INDEX IF NOT EXISTS idx_cep_campaigns_type
+  ON public.cep_campaigns(campaign_type);
+
+════════════════════════════════════════════════════════════════════
+PART B — LIFECYCLE STATS SERVER FUNCTION
+════════════════════════════════════════════════════════════════════
+
+Create src/lib/lifecycle-stats.server.ts
+
+This file reads LIVE stats from the App's email_send_log and
+email_lifecycle_log tables via the existing YAYA_DATABASE_URL
+postgres connection (same pattern as segments.server.ts).
+
+import { appDb } from '@/lib/app-db.server'  // existing pg connection
+
+export interface LifecycleStat {
+  email_key: string
+  sent_total: number
+  sent_7d: number
+  open_count: number
+  click_count: number
+  failed_count: number
+  last_sent_at: string | null
+  open_rate: number  // percentage
+  click_rate: number
+}
+
+export async function getLifecycleStats(): Promise<LifecycleStat[]> {
+  // Query App.email_send_log grouped by template_name
+  // template_name in email_send_log matches the email_key values
+  // (e.g., 'd1-dinner-nudge' is stored as template_name)
+  // Note: template_name uses hyphens; email_key uses underscores.
+  // Map: replace hyphens with underscores for matching.
+
+  const rows = await appDb.query(`
+    SELECT
+      replace(template_name, '-', '_')          AS email_key,
+      COUNT(*) FILTER (WHERE status = 'sent')   AS sent_total,
+      COUNT(*) FILTER (
+        WHERE status = 'sent'
+          AND created_at > now() - interval '7 days'
+      )                                          AS sent_7d,
+      COUNT(*) FILTER (WHERE status = 'bounced'
+                          OR status = 'failed') AS failed_count,
+      MAX(created_at) FILTER (WHERE status = 'sent') AS last_sent_at
+    FROM public.email_send_log
+    WHERE template_name NOT IN (
+      'signup','magiclink','recovery','invite',
+      'email_change','reauthentication'
+    )
+    GROUP BY replace(template_name, '-', '_')
+  `)
+
+  // Query open and click counts from email_engagement_events
+  // (table: email_engagement_events with event_type='open'/'click')
+  const engagementRows = await appDb.query(`
+    SELECT
+      replace(template_name, '-', '_') AS email_key,
+      COUNT(*) FILTER (WHERE event_type = 'open')  AS open_count,
+      COUNT(*) FILTER (WHERE event_type = 'click') AS click_count
+    FROM public.email_engagement_events
+    GROUP BY replace(template_name, '-', '_')
+  `)
+
+  // Merge the two result sets
+  const engMap = new Map(engagementRows.rows.map(r => [r.email_key, r]))
+
+  return rows.rows.map(r => {
+    const eng = engMap.get(r.email_key) ?? { open_count: 0, click_count: 0 }
+    const sent = Number(r.sent_total) || 0
+    return {
+      email_key:    r.email_key,
+      sent_total:   sent,
+      sent_7d:      Number(r.sent_7d) || 0,
+      open_count:   Number(eng.open_count) || 0,
+      click_count:  Number(eng.click_count) || 0,
+      failed_count: Number(r.failed_count) || 0,
+      last_sent_at: r.last_sent_at ?? null,
+      open_rate:    sent > 0 ? Math.round((Number(eng.open_count)/sent)*1000)/10 : 0,
+      click_rate:   sent > 0 ? Math.round((Number(eng.click_count)/sent)*1000)/10 : 0,
+    }
+  })
+}
+
+If email_engagement_events does not exist in App DB, fall back to
+querying open/click from email_send_log.metadata JSONB:
+  COUNT(*) FILTER (WHERE metadata->>'opened' = 'true') AS open_count
+
+Wrap entire function in try/catch — on error return [] so the page
+never crashes if the App DB connection is unavailable.
+
+════════════════════════════════════════════════════════════════════
+PART C — CAMPAIGNS PAGE REBUILD
+════════════════════════════════════════════════════════════════════
+
+Replace src/routes/_authenticated/campaigns/index.tsx entirely.
+
+The page has TWO tabbed sections: "Broadcast" and "Lifecycle".
+Use Tabs / TabsList / TabsTrigger / TabsContent from shadcn/ui.
+
+── DATA QUERIES ─────────────────────────────────────────────────
+
+Query 1 — Hub cep_campaigns (same Supabase client as before):
+  Broadcast: .eq('campaign_type', 'broadcast')
+  Lifecycle reference rows: .eq('campaign_type', 'lifecycle')
+    (these are the seeded rows from the migration)
+
+Query 2 — Live lifecycle stats: call getLifecycleStats() as a
+  TanStack server function. Cache for 5 minutes (staleTime).
+  queryKey: ['lifecycle-stats']
+
+Merge: for each lifecycle campaign row from Hub, find the matching
+  LifecycleStat by email_key (stored in subject_override column)
+  and overlay the live sent/open/click counts.
+
+── BROADCAST TAB ────────────────────────────────────────────────
+
+Identical to the current campaigns page UI. No changes to
+existing broadcast create/send/retry/delete/archive logic.
+
+Add a KPI benchmark chip below the tab title:
+  "Benchmark: 15% open rate"
+  Color the open_rate cell: green if ≥15%, amber if 10–14%, red if <10%.
+
+── LIFECYCLE TAB ────────────────────────────────────────────────
+
+Header text: "Always-on sequences. Triggered automatically by user
+behaviour or time in lifecycle. Read-only — managed via App codebase."
+
+Add a KPI benchmark chip: "Benchmark: 40% open rate"
+
+Table columns:
+  Name | Trigger Description | Status | Sent (total) | Sent (7d) |
+  Open Rate | Click Rate | Last Sent | Actions
+
+Status badge logic:
+  sent_7d > 0  → green "Active"
+  sent_total > 0 but sent_7d = 0 → amber "Idle"
+  sent_total = 0 → grey "No sends yet"
+
+Open Rate cell coloring:
+  ≥ 40% → green
+  25–39% → amber
+  < 25%  → red
+  0 / no data → muted "—"
+
+Actions column: ONE button only — "View sends" — which opens a
+  DrillDownSheet (shadcn Sheet, side="right") showing:
+  - Email key and template name
+  - KPI summary: total sent, open rate, click rate, failed count
+  - Last 10 sends from App email_send_log (fetched via a separate
+    server function getLifecycleSendLog(emailKey, limit=10)):
+    columns: Recipient email (masked: show first 3 chars + ***@domain),
+    Sent At, Status badge
+  No edit, no delete, no send controls on lifecycle rows.
+
+No "New campaign" button on the Lifecycle tab.
+
+── SHARED COMPONENTS ────────────────────────────────────────────
+
+KPI bar above each tab's table (flex row, 3 stat tiles):
+  Broadcast tab: Total campaigns | Total sent | Avg open rate
+  Lifecycle tab: Active sequences | Total sent (all time) | Avg open rate
+
+Mobile: both tables use overflow-x-auto. On screens < 640px, collapse
+  the table into cards (one card per row, label+value pairs stacked).
+  Min touch target on all buttons: 44×44px.
+
+── BENCHMARK LINES ON OPEN RATE ────────────────────────────────
+
+In both tables, add a small inline indicator on the open rate column
+header:
+  Broadcast → "(target: 15%)"
+  Lifecycle → "(target: 40%)"
+
+════════════════════════════════════════════════════════════════════
+PART D — DRILL-DOWN SHEET COMPONENT
+════════════════════════════════════════════════════════════════════
+
+Create src/components/campaigns/LifecycleDrillSheet.tsx (max 150 lines)
+
+Props:
+  interface LifecycleDrillSheetProps {
+    open: boolean
+    onClose: () => void
+    emailKey: string
+    name: string
+    stats: LifecycleStat | null
+  }
+
+Content:
+  - Sheet header: email key in monospace + campaign name
+  - 4 stat tiles: Total Sent | Open Rate | Click Rate | Failed
+  - Table: last 10 sends (getLifecycleSendLog server function)
+    columns: Masked email | Sent At | Status
+  - "View in App email log" note at bottom (informational, no link)
+
+Email masking helper:
+  function maskEmail(email: string): string {
+    const [local, domain] = email.split('@')
+    return `${local.slice(0,3)}***@${domain}`
+  }
+
+════════════════════════════════════════════════════════════════════
+PART E — NEW SERVER FUNCTION FOR DRILL-DOWN
+════════════════════════════════════════════════════════════════════
+
+Add to src/lib/lifecycle-stats.server.ts:
+
+export interface LifecycleSendRow {
+  recipient_email: string
+  status: string
+  sent_at: string
+}
+
+export async function getLifecycleSendLog(
+  emailKey: string,
+  limit = 10
+): Promise<LifecycleSendRow[]> {
+  const templateName = emailKey.replace(/_/g, '-')
+  try {
+    const rows = await appDb.query(`
+      SELECT recipient_email, status, created_at AS sent_at
+      FROM public.email_send_log
+      WHERE template_name = $1
+        AND status = 'sent'
+      ORDER BY created_at DESC
+      LIMIT $2
+    `, [templateName, limit])
+    return rows.rows
+  } catch {
+    return []
+  }
+}
+
+════════════════════════════════════════════════════════════════════
+PART F — IMPLEMENTATION CONSTRAINTS
+════════════════════════════════════════════════════════════════════
+
+1. No TODO comments. All functions fully implemented.
+
+2. File size: campaigns/index.tsx max 300 lines.
+   Extract: LifecycleDrillSheet.tsx, CampaignActions.tsx (already
+   exists in existing code), BroadcastTable.tsx, LifecycleTable.tsx,
+   CampaignKpiBar.tsx — each max 150 lines.
+
+3. The existing broadcast create/send/retry/delete/archive mutations
+   are UNCHANGED. Do not touch campaigns.functions.ts.
+
+4. If getLifecycleStats() returns [] (App DB unreachable), show an
+   amber banner on the Lifecycle tab: "Live stats unavailable —
+   App database connection failed. Showing cached counts only."
+   Do not crash the tab.
+
+5. Programmatic tests — add src/components/campaigns/LifecycleTable.test.tsx:
+
+   import { describe, it, expect } from 'vitest'
+
+   describe('maskEmail', () => {
+     it('masks local part after 3 chars', () => {
+       const { maskEmail } = require('./LifecycleDrillSheet')
+       expect(maskEmail('angela@yaya-gemma.com')).toBe('ang***@yaya-gemma.com')
+     })
+     it('handles short local parts', () => {
+       expect(maskEmail('ab@test.com')).toBe('ab***@test.com')
+     })
+   })
+
+   describe('lifecycle status badge', () => {
+     it('shows Active when sent_7d > 0', () => {
+       // verify badge color logic via direct function test
+       const { getLifecycleStatus } = require('./LifecycleTable')
+       expect(getLifecycleStatus({ sent_7d: 5, sent_total: 100 }))
+         .toBe('active')
+     })
+     it('shows Idle when sent_total > 0 but sent_7d = 0', () => {
+       expect(getLifecycleStatus({ sent_7d: 0, sent_total: 50 }))
+         .toBe('idle')
+     })
+     it('shows no-sends when both are 0', () => {
+       expect(getLifecycleStatus({ sent_7d: 0, sent_total: 0 }))
+         .toBe('no-sends')
+     })
+   })
