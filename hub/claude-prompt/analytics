@@ -1,0 +1,25 @@
+# Add Metric Dashboards
+# Create visualization for the following:
+* New User Trend - line graph with average line (to be used as benchamrk)
+  - using profiles.created_at, count number of unique email aggregated by time frame
+  - one click deep dive that will show me where are they coming from
+
+* Weekly Active Users - line graph with average line (to be used as benchamrk)
+  - using users log dates turncate to weekly then aggregated by time frame
+
+* create a cohort lifetime graph
+  - cohorted by first log in, count numbers of active for each week number (W0, W1...) I want to understand the % survival rate by cohort
+  - I should be able to expand this to sub-cohort
+
+* I want to be able to see my cohorted lifetime, meaning, I can ask what is the averain ge lifetime (in terms of week) for all users who has been in the app for x weeks
+    sum the percentage active users per week number   --- cohort  week 0 Active User%  week 1 Active User%  week 2 Active User%   
+                                                          May 1    100%                80%                   60%                =2.4
+                                                        
+    meaning: on an average users uses the app for 2.4 before churning
+                                                  
+## TO-DO
+[ ] One-click deep dives
+[ ] I should be able to choose timeframe and time aggregation (daily, weekly, monthly)
+[ ] create a promo code name
+[ ] Write the first comment
+
