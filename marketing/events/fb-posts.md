@@ -65,6 +65,8 @@
       
       Code pour les mamans du groupe : TRAVAILLE
       (30 jours gratuits — je l'ai construit seule, en tant que maman qui travaille. Vos retours m'aident vraiment 🙏)
+
+    * Black-list this group: Admin deleted the post.
     
 
   - Les mamans Indépendantes et Entrepreneuses
