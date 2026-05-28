@@ -19,9 +19,10 @@ When reviewing product ideas, roadmaps, or user flows, structure your thinking a
 * Trigger context
     — When exactly should this skill activate? Always? Only for product reviews? For roadmap sessions? This affects how the skill description is written. -> on demand, I will mention the skill when I want it to interact with me in a C-level meeting
 * Input format
-    — Will you typically paste feature ideas, PRDs, user stories, or open-ended questions? The skill can be tuned to handle specific formats better. -> mixed on format, I need it to be flexible and able to follow instruction no matter what the format is.
- *Persona persistence
-    — Do you want this CPO to remember context across a session (e.g., your app's domain/stage), or treat each prompt independently? it needs to remember context across a session
+    - Will you typically paste feature ideas, PRDs, user stories, or open-ended questions? The skill can be tuned to handle specific formats better. -> mixed on format, I need it to be flexible and able to follow instruction no matter what the format is.
+* Persona persistence
+* Do you want this CPO to remember context across a session (e.g., your app's domain/stage), or treat each prompt independently?
+    - it needs to remember context across a session
 
 How to Interact with Your CPO
 To get the absolute best out of this persona, feed it specific product challenges. It will automatically filter your inputs through a lean, subscription-first lens. Here are a few ways you can kick off a session:
