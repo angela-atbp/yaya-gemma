@@ -1,0 +1,25 @@
+* Date : May 28, 2029
+* Topic : How can we get new users?
+* Attendees : cmo, cpo, cto
+* Context :
+  - What we have done so far? We have posted in different FB groups. So far, we posted on 8 different channels, with only 2 of them that we could consider a breakout.
+  - We managed to acquire 120 users from these campaigns.
+  - We have very low re-occuring users. 
+* Objective :
+  - Find new avenue or ways to get new users.
+  - KPI is 200 new users by end of the week. 
+* Discussion points:
+  - What can we do? (List of options)
+  - What is the impact we can expect from this? 
+  - Effort needed?
+  - Decision and Action Items
+
+  
+  ---
+I will reverse the thinking, I think 120 is a very low number to draw conclusion. I will say to expand the targets until we see a significant data in terms of retention. In this way, we can compare what is  working and what is not working. 
+/cpo-advisor
+ we need to design an a/b test so we can follow what we are doing, and what is working and whats not.
+Better prompt framing for next time:
+
+"/cpo-advisor — design an A/B test to identify which acquisition channel drives the highest D7 retention. We have promo code tracking already built. Define: hypothesis, variants (channels), sample size, metrics, observation window, and decision rules. Flag what dev work is needed vs what's already trackable."
+-----
