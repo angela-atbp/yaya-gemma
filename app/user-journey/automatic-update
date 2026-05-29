@@ -1,0 +1,1 @@
+⚠️ User Experience: To ensure users always have the latest version, I would like to show a subtle toast notification saying "A new version is available. [Tap to Update]" which triggers the reload when clicked. By clicking this, users should get the update automatically and immediately without requiring them to close and reopen the app.
