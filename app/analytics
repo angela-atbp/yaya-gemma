@@ -1,0 +1,11 @@
+# 1. Differentiating the Launch Source
+  To accurately measure sessions, I need to know where the session started. 
+  * App Installed: A user launching your PWA from an app icon on their home screen 
+  * Browser: Opening it via a browser tab.
+
+# User Session
+  * Number of Active Users
+  - Active users are tracked through Visibility-Driven Session Tracking. To be considered as Active User -> Yaya Gemma tab must be actively visible to the human eye. Block any user session analytics start until this state is 'visible'.
+  * Time spent 
+  - Total Time the user is active per session.
+  * Avg Session per Active users
