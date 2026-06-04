@@ -1,0 +1,23 @@
+# Full cycle email v2 to-do list: 
+
+1. we need to write/rewrite 2 welcome emails: 
+    *  Welcome email should be value-focused rather than feature-focused.  
+      [ ] For users who completed onboarding: Message should lead them to either personalized their experience with yaya-gemma by adding preferences and allergies or something that will lead them to the next step of the cycle -> either plan their week - remove mental load or add pantry - make sure they dont spoil anything , waste nothing.
+      [ ] Incomplete onboarding. - Message should lead them to complete onboarding.. emphasize that how fast and just by telling Yaya Gemma their objective / problem (look at the questionaire in step 1 in the 4 step flow) they can easily customized their expereince and solve their problem. If at this stage, we have collected some information, example tasted preference we should try to incorporate that in the email.
+    * Success Measure: All confirmed sign-up must received personalized welcome email.
+
+2. Drop the Onboarding 05 - empty_pantry_d3. This is very "pantry" oriented and sounds like a task.
+
+3. Activation - At this stage, user state... "Now that I am onboarded, what now?"
+  our objective at this point is to..(this is in no order)
+    1. Help what to cook tonight 
+    2. Remind them what needs to be used
+    3. Get them ready for the following week
+    4. Help them with their grocery shopping (leverage that it can be shared easily)
+
+4. Retention & cycle restart · Bringing back the "I cooked this" habit
+ 
+5. Advocacy
+
+  
+   
