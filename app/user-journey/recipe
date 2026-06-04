@@ -1,0 +1,101 @@
+Rescue Recipes section on /recipes
+
+Bring back a "Perfect Match"-style card section on /recipes, but scoped to expiring pantry items (rescue), and deep-linkable from the Pantry rescue alert's "Recipe" button.
+
+Behavior
+
+
+
+
+
+Only render the section when rescueItems.length > 0. If no items are expiring, the section is hidden entirely.
+
+
+
+Section title: "Cook before it expires" (FR: "À cuisiner avant péremption"), with a subline naming the focused expiring item(s).
+
+
+
+Use the existing matched recipes from the match-recipes query (already passes expiringItems). Filter to recipes whose ingredients include at least one rescue item (via the existing filterRecipesForRescue helper in src/lib/rescueFilter.ts).
+
+
+
+If the URL has ?rescue=true&item=<name> (as dispatched by RescueAlerts on /pantry), narrow the filter to that specific item; the chosen item is shown as a chip at the top of the section.
+
+
+
+Show up to 3 recipe cards using the same RecipeCard styling already used elsewhere on the page (favorite, cook now, add-to-grocery actions all wired to existing handlers).
+
+
+
+Loading state: 2 RecipeCardSkeletons while matchLoading.
+
+
+
+Empty state (rescue items exist but no matches yet): small note "We're finding recipes for {item}…" plus a "Generate one for me" button that triggers the existing AI generation flow with focusIngredient = item.
+
+Deep-link / scroll
+
+
+
+
+
+On mount (and whenever location.search changes), if ?rescue=true is present, scroll the section into view smoothly (scrollIntoView({ behavior: "smooth", block: "start" })) after the first matched recipes paint. Use a useRef<HTMLDivElement> on the section wrapper and a useEffect keyed on [location.search, matchLoading].
+
+
+
+The RescueAlerts "Recipe" button already navigates with the correct params — no changes needed in src/components/RescueAlerts.tsx.
+
+Placement in src/pages/RecipesMerged.tsx
+
+Insert directly after the "expiring warning" block (currently lines 1363–1389) and before the "Create a recipe just for you" custom-recipe hub (currently starting at line 1392). The section reuses existing state: rescueItems, matched, matchLoading, pantryItems, plus the existing card handlers (handleCookNow, toggleFavorite, addToGroceryList, expand/collapse).
+
+Technical details
+
+
+
+
+
+Read query params with new URLSearchParams(location.search) (no new dep). Extract rescueParam = sp.get("rescue") === "true" and focusItem = sp.get("item").
+
+
+
+Filter:
+
+const rescueRecipes = useMemo(() => {
+  if (!matched || rescueItems.length === 0) return [];
+  return filterRecipesForRescue(matched, focusItem)
+    .filter((r) =>
+      (r.ingredients_json || []).some((ing) =>
+        rescueItems.some((ri) =>
+          ing.name?.toLowerCase().includes(ri.item_name.toLowerCase()) ||
+          ri.item_name.toLowerCase().includes(ing.name?.toLowerCase() ?? "")
+        )
+      )
+    )
+    .slice(0, 3);
+}, [matched, rescueItems, focusItem]);
+
+
+
+Section JSX is gated by rescueItems.length > 0. Inside, gate the cards list by rescueRecipes.length > 0, otherwise show the empty/generate state.
+
+Files touched
+
+
+
+
+
+src/pages/RecipesMerged.tsx — add the new section, ref, scroll effect, and query-param parsing. No other files change.
+
+Out of scope
+
+
+
+
+
+No edits to RescueAlerts.tsx, useRescueItems, match-recipes edge function, or grocery/cook handlers.
+
+
+
+No new design tokens; uses existing card/badge styles.
