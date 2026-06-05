@@ -1,11 +1,38 @@
-# 1. Differentiating the Launch Source
-  To accurately measure sessions, I need to know where the session started. 
-  * App Installed: A user launching your PWA from an app icon on their home screen 
-  * Browser: Opening it via a browser tab.
+# LEADING KPIs:
+Headline
+Total Number of Users
+Total New Users for the week
+Total Active Users for the week
+Total POwer Users for the week (users with Active 3+ Days This Week)
+Avg lifetime per user (lifetim in terms of week)
 
-# User Session
-  * Number of Active Users
-  - Active users are tracked through Visibility-Driven Session Tracking. To be considered as Active User -> Yaya Gemma tab must be actively visible to the human eye. Block any user session analytics start until this state is 'visible'.
-  * Time spent 
-  - Total Time the user is active per session.
-  * Avg Session per Active users
+The Funnel (bar chart visualization)
+1. Total Number of Sign-ups
+2. Total Number of Confirmed Sign-ups (email confirmed) -> considered as users at this point
+3. Total Number of Users that Completed Onboarding
+4. Total Number of Users that Generated Recipe -> could be from any page: assembly page, ma-semaine page, my recipes
+5. Total Number of Users that Cooked this (aha moment)-> any user that at least tried the cook now journey
+
+Important about the funnel : I want to know: How much is the drop at each stage
+
+Line chart
+Timeframed Analytics  - (option to choose if the aggregation is Daily | Weekly | Monthly)
+- trend of New Users 
+- trend of active users
+- trend of returning active users) -> active users for the give timeframe that hwere active in previous same timeframe
+- trend of sticky users -> users that are active in the last 3 weeks + current week (4 weeks total)
+
+Timeframed analytics should have an ability to deep dive to see
+- split by launch type (app or browser
+- source
+
+Cohort Analytics
+Cohort (based creation date) retention - survival rate -> see who and features used. I should also be able to see the lifetime (in terms of weeks) per cohort. 
+
+Cohort (based on source) retention - survival rate -> see who and features used. I should also be able to see the lifetime (in terms of weeks) per cohort. 
+
+Key Insights:
+Give me actionable insights.. example (drop on active users is caused by x , fix it. most used features .. reactive users by comms about this feature.
+
+
+
