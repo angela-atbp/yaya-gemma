@@ -1,0 +1,17 @@
+Create a master users session log
+
+1. user_id (this will be the primary key) 
+2. event timestamp (local time)
+3. event name : function clicked or displayed to the user
+  - functions : track only if the user clicks the component
+    - I Cook This
+    - How many minutes do you have 
+    - 
+
+  - display : track only if the user has viewed the component because we are PWA, we need to make sure this is an active browser, "eye of the view" and not just an open browser on the users multi-tab
+    - toast
+    - onboarding
+    
+4. Page : the page where the user is when the even happened
+
+  
