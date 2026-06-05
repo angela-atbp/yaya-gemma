@@ -1,0 +1,2 @@
+Goal
+On /emergency, tapping a generated recipe should open the Cook Now journey (the same overlay used elsewhere) instead of replacing tonight's dinner in meal_plans. The "Tonight's plan changed" toast must not fire.
