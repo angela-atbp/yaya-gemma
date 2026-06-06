@@ -1,3 +1,18 @@
 # changes to the /ma-semaine. 
 1. move the shopping list card after the grocery for the week card. 
 2. remove 'Guests this week' toggle and make the deafult portion on the generated recipes based on the profile setting otherwise default to 2
+
+# feature improvement - 2026-06-06
+* **Title:** Shift /ma-semaine week dates to next week when generation is done on or later than Friday
+* **Where will these changes happen:**
+  - /ma-semaine page
+* **Objective** calibrate week dates based on when the user is using the feature to do planning
+* **Scenario** 
+  1. User taps generate my plan at the input interface before friday - update the current week plan recipes per day based on the input but keep dates.
+    Example:
+      Action Date : Thursday, Jun 4
+      Week plan dates : Sun, May 31 to Sat, Jun 6
+  1. User taps generate my plan at the input interface on or after friday - update the current week plan recipes per day based on the input AND move the  dates to the next week.
+      Example:
+      Action Date : Saturday, Jun 6
+      Week plan dates : Sun, Jun 7 to Sat, Jun 13
