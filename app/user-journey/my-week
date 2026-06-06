@@ -16,3 +16,32 @@
       Example:
       Action Date : Saturday, Jun 6
       Week plan dates : Sun, Jun 7 to Sat, Jun 13
+
+
+# feature improvement - 2026-06-06-a
+* **Title:** Add note, if the start of the week is chaotic
+* **Where will these changes happen:**
+  - /ma-semaine page
+* **Objective** if the user marks sunday as chaotic (aka no cook day), add a small note:
+* **Scenario** 
+  1. User taps generate my plan at the input interface before friday - update the current week plan recipes per day based on the input but keep dates.
+    Expected result:
+    Sunday card shows
+    --------
+    Don't forget—[Day] is a no-cook day! 
+    Cook double the day before so you can just heat and eat. 🙌
+    --------
+    - In EN & FR
+
+# feature improvement - 2026-06-06-b
+* **Title:** Diversity and Seasonality in the weekly recipe planning
+* **Where will these changes happen:**
+  - /ma-semaine page
+* **Objective** the weekly plan should have a diversed, well balanced and adjusted to season recipes
+* **Expectation** 
+  1. Recipes can include both AI and Tavily Generated recipes 
+    - if generated from Tavily add source pill (similar to /recipes card)
+  2. user can see some variation and seasonal products
+  3. User preference and restrictions are still strictly respected & expiring ingredients from pantry are prioritized
+
+
