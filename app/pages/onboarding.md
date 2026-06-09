@@ -22,3 +22,8 @@ Value Proposition:
 
 - consent to use data must be present in the onboarding stage
   - opt-out
+
+
+-- POST ONBOARDING
+- once the first week is loaded, prompt to the user how easy to create their grocery list
+https://claude.ai/design/p/e1f171d8-7991-426a-9da5-4188b290f913?file=Grocery+List.html
