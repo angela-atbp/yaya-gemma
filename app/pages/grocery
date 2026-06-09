@@ -1,0 +1,11 @@
+- Allows users to create a list of grocery items 
+- Users may add 
+  - manually - auto-complete
+  - photo of a list
+  - upload a file list
+- edit the list
+- share the list (whatsapp, copy the link, copy the text, email)
+  - share list is a categorized checklist with details (qty, etc)
+- list is categorized for easy shopping
+- completed (bought items) can be added to the pantry
+- users can see what items are going to be used for (recipe it is needed)
