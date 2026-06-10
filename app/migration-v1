@@ -1,0 +1,80 @@
+I'll execute the entire lovable_complete_migration.md file in order, step by step. Nothing is skipped.
+
+Steps
+
+Step 0 — Foundations
+
+
+
+
+
+0a: Append the V1 CSS variables (--ob-white, --hairline, --smoke, --linen-2, --sh-ob, etc.) to src/index.css :root without touching existing tokens.
+
+
+
+0b: Run a Supabase migration adding columns to public.profiles: week_vibe_schedule, household_size, spice_level (mild/medium/hot check), has_seen_week_tour, has_seen_rod_tour, has_seen_pantry_tour. Types in src/integrations/supabase/types.ts regenerate automatically after approval — no manual edit needed.
+
+Step 1 — Shared primitives
+
+
+
+
+
+Create src/components/v1/primitives.tsx with OBtn, Chip, Kicker, StepDots, VibeSeg, SpotRow, CoachCard, OnboardingLayout, OnboardingFoot.
+
+Step 2 — Onboarding screens (9)
+Create under src/pages/onboarding/:
+ScWelcome.tsx, ScWeekVibe.tsx, ScPantryCapture.tsx, ScReading.tsx, ScDetected.tsx, ScInspiration.tsx, ScPrefsA.tsx, ScPrefsB.tsx, ScWeekPlan.tsx.
+
+Step 3 — Onboarding router
+Update src/pages/Onboarding.tsx to mount the new screen sequence while preserving all existing Supabase save logic, auth, and tracking.
+
+Step 4 — My Week tour
+Update src/pages/MaSemaine.tsx to add the 3-tip first-run coach tour gated by profiles.has_seen_week_tour.
+
+Step 5 — Recipe Daily Landing
+Update src/pages/AssemblyHome.tsx (route /) with the daily landing state machine + 3-tip change tour gated by has_seen_rod_tour.
+
+Step 6 — Pantry tour
+Update src/pages/Pantry.tsx with rescue layout + 2-tip tour gated by has_seen_pantry_tour.
+
+Step 7 — Tests
+Create src/pages/onboarding/__tests__/onboarding.test.tsx.
+
+Technical notes
+
+
+
+
+
+File is 1859 lines; each step's code is pasted verbatim from the spec.
+
+
+
+Existing CSS tokens, fonts, hooks (useInventory, useGroceryList, useAuth, etc.), contexts, routes, LogoLockup, CookNowOverlay, and src/components/ui/* are not modified.
+
+
+
+Supabase migration must be approved before steps 3–6 (they read/write the new profile flags). I'll run the migration first, then proceed with file writes after approval.
+
+
+
+After all writes, I'll verify build output and the dev server.
+
+Out of scope
+
+
+
+
+
+Any deviation from the spec text.
+
+
+
+Refactors of existing pages beyond what each step says to update.
+
+
+
+Removing/renaming existing routes or components.
+
+Approve to start. I'll begin with the Supabase migration (Step 0b) since it gates later steps, then execute 0a → 7 in order.
