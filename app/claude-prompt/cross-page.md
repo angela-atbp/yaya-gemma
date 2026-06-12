@@ -1,6 +1,4 @@
-This is how lovable frames my problem statement
 
-Recipes surfaced on / (home) and /ma-semaine are sometimes condiments, sauces, or single-component items (e.g. "Classic Emulsion Dressing") rather than complete, edible meals. The underlying AI prompts don't explicitly forbid this, don't enforce a real meal shape (protein + starch/veg + flavor), and rely on weak allergen wording.
 ----------------------------------------------------------
 # Issue: Generated recipes are not appearing in the right destination
 ## Context:
