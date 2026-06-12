@@ -21,3 +21,12 @@
     - Expiring ingredients first. Otherwise, always use the current ingredients.
     - Always consider Taste and preferrence.
     - Real Recipes: must be at least 3 ingredients (not including staples) and has 4 or more actual cooking steps.
+      
+**Logic and Definition**
+- Your week : current day truncate to week
+- Next week : current day+6 days truncate to week
+   
+**Backlog**
+- Batch Cooking Feature
+- Start of the Day
+- Grocery Day
