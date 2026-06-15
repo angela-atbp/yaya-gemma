@@ -19,6 +19,8 @@ your-project-repo/
 │   │   ├── ai-guardrails.md--------- # Best practices for prompting, context loading, and interacting with AI tools
 │   │   ├── product-dna.md----------- # Operational constraints, feature matrix, and phased launch roadmap
 │   │   └── why-we-exists.md--------- # Core value proposition, user problem statement, and long-term product vision
+|   |
+│   └── glossary.md ----------------- # list of terms and definition
 |
 ├── app/----------------------------- # Yaya Gemma's App Feature UI/UX esign and Value Proposition
 │   ├── pages/----------------------- # Client-Side (The Frontend / UI)
@@ -55,6 +57,7 @@ your-project-repo/
 │   └── tier-pricing.md
 │
 └── README.md------------------------ # This file (Project overview & developer map)
+
 ```
 
 
