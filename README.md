@@ -16,9 +16,9 @@ your-project-repo/
 │
 ├── docs/---------------------------- # THE KNOWLEDGE BASE (Project Source of Truth)
 │   ├── knowledge-base/-------------- # High-level product alignment & constraints
-│   │   ├── ai-guardrails/----------- # Executive strategy, roadmap, and design guardrails
-│   │   ├── product-dna.md----------- # Executive strategy, roadmap, and design guardrails
-│   │   └── why-we-exists.md--------- # Executive strategy, roadmap, and design guardrails
+│   │   ├── ai-guardrails/----------- # Best practices for prompting, context loading, and interacting with AI tools
+│   │   ├── product-dna.md----------- # Operational constraints, feature matrix, and phased launch roadmap
+│   │   └── why-we-exists.md--------- # Core value proposition, user problem statement, and long-term product vision
 │   │
 │   └── data-model/------------------ # Database architecture & type definitions
 │       └── data-model.md------------ # Tables, constraints, and optimization indexes
@@ -35,10 +35,12 @@ your-project-repo/
 
 # 🚀 Local Development Setup 
 Prerequisites Node.js (v18 or higher)Supabase CLI (for database schema management)
+
 Step 1: Clone and Install
 Bashgit clone https://github.com/your-username/your-project-repo.git
 cd your-project-repo
 npm install
+
 Step 2: Environment VariablesCreate a .env.local file in the root directory:PlaintextVITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_public_key
 Step 3: Run the Local EngineBashnpm run dev
