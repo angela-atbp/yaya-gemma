@@ -3,6 +3,9 @@ A mobile-first, high-utility Progressive Web App (PWA) designed for busy familie
 
 # 🏗️ Repository Architecture
 This repository uses a structured documentation layout alongside the codebase to ensure our development process, AI knowledge base, and product guardrails remain entirely synchronized.Plaintextyour-project-repo/
+
+```text
+your-project-repo/
 │
 ├── .github/------------------ # GitHub Actions, workflows, and issue templates
 │
@@ -13,8 +16,8 @@ This repository uses a structured documentation layout alongside the codebase to
 │
 ├── docs/--------------------- # THE KNOWLEDGE BASE (Project Source of Truth)
 │   ├── context/-------------- # High-level product alignment & constraints
-│   │   └── ai-guardrails----- # Executive strategy, roadmap, and design guardrails
-│   │   └── product-dna.md---- # Executive strategy, roadmap, and design guardrails
+│   │   ├── ai-guardrails/---- # Executive strategy, roadmap, and design guardrails
+│   │   ├── product-dna.md---- # Executive strategy, roadmap, and design guardrails
 │   │   └── why-we-exists.md-- # Executive strategy, roadmap, and design guardrails
 │   │
 │   ├── data-model/----------- # Database architecture & type definitions
@@ -27,6 +30,7 @@ This repository uses a structured documentation layout alongside the codebase to
 │       └── tier-pricing.md
 │
 └── README.md----------------- # This file (Project overview & developer map)
+```
 
 # 🚦 Feature Roadmap & Current Status
 To maximize velocity during our validation stage, features are strictly bifurcated. Do not write backend scaling logic for Phase 2 items.
