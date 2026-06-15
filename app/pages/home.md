@@ -45,19 +45,28 @@ The Visual: A large, clean dynamic card at the absolute top of the screen with B
 
 # Feature List (Automated & Passive)
 To make this zero-touch experience work, the homepage runs these components automatically in the background the moment the app mounts. 
-Expected outcome from this page:
-[ ] The recipe today == the recipe shown in the equivalent date in Week's plan.
-    Example: Today is Jun 16
-    This Week's Plan
-     Jun 15 -> Recipe A
-     Jun 16 -> Recipe B
-     Jun 17 -> Recipe C
-     Jun 18 -> Recipe D
-     Jun 19 -> Recipe E
-     Jun 20 -> Recipe F
-     Jun 21 -> Recipe G
-   This Page Hero Recipe -> Recipe B
-[ ] Dynamic Hero Image consistent with the Recipe Title
+
+# Scenario
+ * **(1) User has a week plan**
+    **Expected outcome from this page:**
+    [ ] The recipe today == the recipe shown in the equivalent date in Week's plan.
+      Example: Today is Jun 16
+      This Week's Plan
+      Jun 15 -> Recipe A
+      Jun 16 -> Recipe B
+      Jun 17 -> Recipe C
+      Jun 18 -> Recipe D
+      Jun 19 -> Recipe E
+      Jun 20 -> Recipe F
+      Jun 21 -> Recipe G
+      This Page Hero Recipe -> Recipe B
+    [ ] Dynamic Hero Image consistent with the Recipe Title
+    
+* **(2) User has NO week plan** 
+    **Expected outcome from this page:**
+    [ ] Fallback # 1: Suggest a Dinner Recipe based on users pantry. Use Best possible match. No cooking vibe to consider but the recipe complies with Hard Rules
+    [ ] Fallback # 2: Suggest a Dinner Recipe based on users pantry. Use Best possible match. No cooking vibe to consider but the recipe complies with Hard Rules
+    [ ] Dynamic Hero Image consistent with the Recipe Title
 
 # Tracking & Analytics.
 Events in this page is tracked in home_page_events, tracking
