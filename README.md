@@ -34,7 +34,7 @@ your-project-repo/
 │   └── data-model/------------------ # Database architecture & type definitions
 │       └── data-model.md------------ # Tables, constraints, and optimization indexes
 |
-├── back-end/------------------------ # Yaya Gemma's App Feature UI/UX esign and Value Proposition
+├── function/------------------------ # Yaya Gemma's App Feature UI/UX esign and Value Proposition
 │   ├── features/-------------------- # Client-Side (The Frontend / UI)
 │   │   ├── week-planner.md
 │   │   ├── generate-recipe.md
