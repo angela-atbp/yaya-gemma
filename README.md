@@ -13,15 +13,40 @@ your-project-repo/
 │   ├── components/------------------ # Shared UI elements (Cards, Inputs, Modals)
 │   ├── hooks/----------------------- # React hooks (pantry matching, optimistic sync)
 │   └── supabase/-------------------- # DB migrations, schemas, and RLS policies
-│
+|
 ├── docs/---------------------------- # THE KNOWLEDGE BASE (Project Source of Truth)
 │   ├── knowledge-base/-------------- # High-level product alignment & constraints
-│   │   ├── ai-guardrails/----------- # Best practices for prompting, context loading, and interacting with AI tools
+│   │   ├── ai-guardrails.md--------- # Best practices for prompting, context loading, and interacting with AI tools
 │   │   ├── product-dna.md----------- # Operational constraints, feature matrix, and phased launch roadmap
 │   │   └── why-we-exists.md--------- # Core value proposition, user problem statement, and long-term product vision
+|
+├── app/----------------------------- # Yaya Gemma's App Feature UI/UX esign and Value Proposition
+│   ├── pages/----------------------- # Client-Side (The Frontend / UI)
+│   │   ├── home.md
+│   │   ├── my-week.md
+│   │   ├── recipes.md
+│   │   ├── grocery-list.md
+│   │   ├── favorites.md
+│   │   └── profile.md
 │   │
 │   └── data-model/------------------ # Database architecture & type definitions
 │       └── data-model.md------------ # Tables, constraints, and optimization indexes
+|
+├── back-end/------------------------ # Yaya Gemma's App Feature UI/UX esign and Value Proposition
+│   ├── features/-------------------- # Client-Side (The Frontend / UI)
+│   │   ├── week-planner.md
+│   │   ├── generate-recipe.md
+│   │   ├── scan-to-recipe.md
+│   │   ├── photo-to-recipe.md
+│   │   ├── week-recipe.md
+│   │   ├── add-to-grocery.md
+│   │   ├── smart-substitute.md
+│   │   └── share-grocery.md
+│   │
+│   └── data-model/------------------ # Database architecture & type definitions
+│       └── data-model.md------------ # Tables, constraints, and optimization indexes
+|
+├── data-layer/---------------------- # Database architecture & type definitions
 │   
 ├── ai-chats/------------------------ # Preserved Loavble/Claude/LLM raw outputs and prompts
 │   └── 2026-06-matching-logic.md
