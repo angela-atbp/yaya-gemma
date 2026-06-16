@@ -1,3 +1,7 @@
+#Core frame
+```
+"I pointed my camera at chaos, and the app handed me back a cooked plan — without me typing a thing."
+```
 # Objective
 This page aims to tackle mental load, double-buying, and food waste for a busy parent.  
 Parents don't want a second job as a data entry clerk. The app needs to do 90% of the thinking, tracking, and predicting for them.
