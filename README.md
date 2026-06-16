@@ -54,6 +54,7 @@ your-project-repo/
 │   └── 2026-06-matching-logic.md
 │   
 ├── marketing/----------------------- # Copywriting, pricing strategy, launch notes
+│   ├── micro-influencers/----------- # Conversation logs with instagram microinfluencers
 │   └── tier-pricing.md
 │
 └── README.md------------------------ # This file (Project overview & developer map)
