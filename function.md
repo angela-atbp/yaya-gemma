@@ -1,7 +1,29 @@
 *write here functionalities:
 
+# FEATURES
+*things user can do with the app*
+
+## Add items to user's pantry list 
+**Job to be done:** Alert users expiring items so they spoil these items
+**Data Storage**: add in inventory db
+**Key Features**
+  *Shipped*
+  (1) *BUILD.* user can add items photo (hero), upload and manually - add items the most convenient way
+    * if manually, #auto-compelete feature is triggered
+  (2) *CHANGE.* all items are editable and easily taggable
+    (2.a) swip action to mimic native app (swipe left - delete, swipe right - cooked)
+    (2.b) drop down to edit more
+  (3) *KNOW.* 
+    Why? To relieve mom's from "Mental Inventory", Double-Buying and Radical Food Waste Reduction
+  
+    
+  *Backlog* 
+
 # generate-recipe
-  (1) Must be real-life
+  (1) generate recipe based on the following (in order):
+    (1.a) Expiring items in the users pantry 
+  generate recipes 3 ways (in order):
+    * 
   (2) Must Prioritize the usage of expiring or perishable ingredients
 
 # expiring-date
