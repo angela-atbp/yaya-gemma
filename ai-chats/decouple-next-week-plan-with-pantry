@@ -1,0 +1,251 @@
+My Prompt - lovable
+I noticed that the 'next week plan' is very similar to the 'this week plan'. My theory is because its using the current pantry list. Which in theory will be used for this week cooking. Make the next week plan not restricted to current pantry list, Instead do this: mark all ingredients added on or before the start of current week -> we assume these are ingredients to be used for the week. (2) Create next week plan based only on users taste prefrence and Hard rules restriction (3) every monday, send a notification, in-app message asking the user to confirm (one-click option or one by one) if items were added previously were used or not (4) if used marked them used and remove from the active pantry list, if not, regenrate the week's plan to include (1) expring items (2) non-exprining items.
+
+------------------------------------------
+
+By lovable:
+Next-week plan independence + Monday pantry reconcile
+
+Problem
+
+Today, "This week" and "Next week" plans both consume the same inventory list as pantryItems when calling generate-ma-semaine (see src/pages/MaSemaine.tsx ~L887 and again at L971/L1056/L1145). Because the AI is heavily steered by the pantry ("URGENT — prioritize these expiring pantry items…", pantryMatch, expiring-hero rule in supabase/functions/generate-ma-semaine/index.ts), next week ends up echoing this week.
+
+We will (1) treat the pantry as "this-week-only" by default, (2) generate next week purely from taste + hard rules, and (3) every Monday ask the user to reconcile what they actually used, then update next week accordingly.
+-------------------------------------------
+Behavior
+
+1. Pantry semantics
+
+
+
+
+
+An inventory item is considered "allocated to this week" when added_at <= startOfCurrentWeek (Monday 00:00 local).
+
+
+
+A new derived flag (computed in code, no schema change yet — see step 4 for the persisted flag we add) decides whether an item participates in next week's generation. By default: items added on/before the current week start are NOT passed to next-week generation.
+
+
+
+Items added after the current week start (mid-week shopping) ARE eligible for next-week generation as normal pantry inputs — those are presumed leftover/extra.
+
+2. Next-week generation
+
+In MaSemaine.tsx > handleGenerate, when launchedWeekStart === nextWeekStart:
+
+
+
+
+
+Build pantryItems from inventory filtered to items where added_at > thisWeekStart (i.e. only post-Monday additions).
+
+
+
+Pass a new boolean useTastePlanningOnly: true in the body.
+
+In supabase/functions/generate-ma-semaine/index.ts:
+
+
+
+
+
+When useTastePlanningOnly === true:
+
+
+
+
+
+Skip the "URGENT — prioritize these expiring pantry items" block in the AI prompt (L480 area).
+
+
+
+Drop the Pantry: … injected line (or replace with Pantry: (planning by taste only)) and the pantryMatch weighting in the fallback/repair paths.
+
+
+
+Keep hard rules untouched: allergies (findAllergenViolations), dietaryPreferences, household size, days/shop/batch schedule, cross-week anchor variety, staples.
+
+
+
+Taste preference: continue to read user_taste_profile if already loaded; otherwise add a server-side fetch keyed by user_id (function already has Supabase client) and pass top liked/disliked anchors into the prompt as a soft preference.
+
+
+
+"This week" generation keeps current behavior unchanged.
+
+3. Monday reconcile prompt (in-app)
+
+New in-app message delivered via the existing app_notifications + get-inapp-messages flow.
+
+
+
+
+
+Trigger: first session each Monday (compare last_pantry_reconcile_at profile field — added in step 4 — to current Monday).
+
+
+
+UI: new <PantryReconcileSheet /> opened from MaSemaine.tsx and from a banner on /pantry.
+
+
+
+Content: lists all inventory items where added_at <= thisWeekStart AND not already reconciled for this week. For each: name, expiry date, quantity.
+
+
+
+Actions:
+
+
+
+
+
+"Mark all as used" (one click) — bulk path.
+
+
+
+Per-item toggles: Used / Still have it.
+
+
+
+Submit button persists all answers in one round-trip.
+
+4. Reconcile effects
+
+On submit:
+
+
+
+
+
+Used items → delete from inventory (mirrors how items get consumed elsewhere) and log to consumption_log with source = 'weekly_reconcile'.
+
+
+
+Still have it items → set new column inventory.carry_over_week_start = <nextWeekStart> so the next-week generator now treats them as eligible pantry input (overrides the "added before week start" exclusion).
+
+
+
+Update profiles.last_pantry_reconcile_at = now().
+
+
+
+If any items were marked "still have it": automatically re-invoke generate-ma-semaine for nextWeekStart with useTastePlanningOnly: false, passing the carried-over items as pantryItems (expiring ones still flagged via existing expiring-soon logic, non-expiring as normal pantry). Show toast: "Replanned next week to use leftovers."
+
+Technical details
+
+
+
+
+
+DB migration (only data/state additions, no destructive change):
+
+
+
+
+
+ALTER TABLE inventory ADD COLUMN carry_over_week_start date NULL; (indexable, nullable, RLS unaffected — existing policies on inventory already scope by user_id).
+
+
+
+ALTER TABLE profiles ADD COLUMN last_pantry_reconcile_at timestamptz NULL;.
+
+
+
+Inventory query for next-week generation (client side, no SQL change needed):
+
+
+
+
+
+eligible = inventory.filter(i => new Date(i.added_at) > thisWeekStart || i.carry_over_week_start === nextWeekStart).
+
+
+
+Edge function flag useTastePlanningOnly:
+
+
+
+
+
+Gates the expiring-priority block, the pantryStr injection, and the pantryMatch scoring weight in supabase/functions/generate-ma-semaine/index.ts.
+
+
+
+Fallback paths (buildFallbackDay, deterministic safe pantry bowl) get a parallel branch that uses taste-profile anchors instead of pantryNames.
+
+
+
+Monday detection: reuse getCurrentWeekStart() already in MaSemaine.tsx. New helper shouldShowReconcile(profile, now) checks profile.last_pantry_reconcile_at < thisWeekStart.
+
+
+
+Reconcile sheet: new file src/components/pantry/PantryReconcileSheet.tsx using existing shadcn Sheet. Mounted in src/pages/MaSemaine.tsx and src/pages/PantryHeatmap.tsx. Localized via existing isFr pattern (EN/FR/ES/DE strings).
+
+
+
+In-app message: insert into app_notifications on Monday with kind = 'pantry_reconcile'; the existing notification bell surfaces it. Clicking it opens the same PantryReconcileSheet.
+
+
+
+Mutation hook: new usePantryReconcile() in src/hooks/:
+
+
+
+
+
+delete from inventory for used IDs.
+
+
+
+insert into consumption_log for used IDs (best-effort).
+
+
+
+update carry_over_week_start = nextWeekStart for kept IDs.
+
+
+
+update profiles.last_pantry_reconcile_at.
+
+
+
+If any kept → supabase.functions.invoke('generate-ma-semaine', …, weekStart: nextWeekStart).
+
+
+
+Tests:
+
+
+
+
+
+Vitest for eligiblePantryForWeek() helper (empty / mixed / all-old / carry-over cases).
+
+
+
+Vitest for shouldShowReconcile() (already-reconciled-this-week, never-reconciled, last-week).
+
+
+
+Deno test in supabase/functions/generate-ma-semaine/ confirming useTastePlanningOnly: true removes pantry from the built prompt and still respects allergies/diet.
+
+Out of scope
+
+
+
+
+
+No change to grocery list, MaSemaine layout, or the "Plan this week" UX.
+
+
+
+No change to recipe library or AI provider.
+
+
+
+No email/push notification — Monday prompt is in-app only (matches request wording).
+
+
+
+Carry-over logic is single-week: items kept this Monday are eligible for next week only; the following Monday's reconcile will re-ask.
