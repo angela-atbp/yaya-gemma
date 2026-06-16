@@ -1,0 +1,120 @@
+My Prompt:
+Bugs to fix: In the Grocery List page: Eggs & greek yogurt were added last as "Next week" grocery list, now that the week has rolled over, the eggs and greek yogurt should have been moved to this week's grocery.  The solution should be : (1) when grocery item is created or added mark the week it belongs : Example: if user adds manually in next week, should be tagged with week number ( ISO Week(June 66, 2026)) (2) This week checks what is the current ISO Week number and searches the list of groceries that belongs to the same week number, in other words use the week number is the anchor for this week and next week. (3) add move this items to next week for grocery items iand vice versa. 
+
+LOVABLE
+Problem
+
+Today, grocery items carry a relative tag weekScope: "this" | "next". When the calendar week rolls over, items previously tagged "next" still appear under the Next week tab instead of moving into This week. Eggs and Greek yogurt added last week as "Next week" are stuck there.
+
+Solution
+
+Replace the relative tag with an absolute ISO week anchor on each grocery item. Tabs derive their content from the current ISO week at render time.
+
+1. Data model (stored in grocery_lists.items JSON — no migration needed)
+
+Add a new field to each item:
+
+interface GroceryItem {
+  // …existing fields
+  isoWeek?: string;          // e.g. "2026-W25"  (ISO year + ISO week)
+  weekScope?: "this" | "next"; // kept for back-compat read; no longer written
+}
+
+Helpers in src/lib/groceryUtils.ts:
+
+
+
+
+
+isoWeekKey(date: Date): string → "2026-W25"
+
+
+
+currentWeekKey(), nextWeekKey()
+
+
+
+compareWeekKeys(a, b) for ordering
+
+2. Write path (useGroceryList.ts)
+
+When addItemWithMeta / bulkAddItems* is called with weekScope: "this" | "next", stamp:
+
+
+
+
+
+"this" → isoWeek = currentWeekKey()
+
+
+
+"next" → isoWeek = nextWeekKey()
+
+We keep the weekScope parameter on the public API for callers (MaSemaine, AddToListSheet, GroceryList) — they don't need to know about ISO keys. Internally we resolve it to an absolute isoWeek at write time. Dedup sameScope check uses isoWeek equality.
+
+3. Read path (GroceryList.tsx, SharedList.tsx)
+
+const thisKey = currentWeekKey();
+const nextKey = nextWeekKey();
+
+bucketFor(item):
+  key = item.isoWeek ?? legacyResolve(item)
+  if key <= thisKey  → "this"   // overdue items roll forward automatically
+  if key === nextKey → "next"
+  if key  > nextKey  → "next"   // far-future items shown in Next (rare)
+
+legacyResolve (one-time backfill on read for items missing isoWeek):
+
+
+
+
+
+weekScope === "next" → nextKey of the list's updated_at at the time it was written; since we don't have a per-item timestamp, fall back to currentWeekKey() so old "next" items roll into This week as the user expects.
+
+
+
+otherwise → currentWeekKey().
+
+After the first mutation, items get a real isoWeek written, so legacy ambiguity is short-lived.
+
+4. Per-item "Move to next/this week" action
+
+In the item row (and its expanded panel) in GroceryList.tsx, add a contextual button:
+
+
+
+
+
+If item bucket is this → "Move to next week" → rewrite isoWeek = nextWeekKey().
+
+
+
+If item bucket is next → "Move to this week" → rewrite isoWeek = currentWeekKey().
+
+A small moveItemToWeek(globalIndex, target) helper updates the items array and calls updateItems.mutateAsync. Localized labels via t() (EN/FR).
+
+5. Tabs
+
+TabPill counts are derived from the bucketing function above, so the "Next week" badge will correctly drop to 0 once the week rolls over and items move to "This week".
+
+6. Tests
+
+Add src/lib/__tests__/groceryWeek.test.ts:
+
+
+
+
+
+isoWeekKey correctness across year boundaries (e.g. 2026-01-01).
+
+
+
+Bucket function: overdue isoWeek rolls into "this".
+
+
+
+Legacy weekScope: "next" with no isoWeek → rolls into "this".
+
+
+
+moveItemToWeek flips bucket as expected.
