@@ -1,0 +1,21 @@
+# Swith to full AI generation recipe. 
+  Objective: Offer just one value proposition in terms of how we generate recipe. Instead of offering 3 ways: AI, web scraping thru tavily and using seeded recipe. 
+  Task: Review code, make a list of all features that requires recipe generation and refactor the code so it only uses one way of generating recipes. Make this clean to make sure no leaks can occur or accidental generation of recipe except thru AI. 
+  Success measure: Only AI generated recipe
+# Improve recipe generation and weekly planning.
+  Problem we are facing: 
+    1. Single Generation recipe (use case: regenerating single recipe card, generating recipes from /recipes page, rescue recipes)
+      1.a. Recipes doesnt match the type of meal
+      1.b. No seasonality on the recipes
+      1.c. Unrealistic recipes
+      1.d. Title and actual recipes dont match
+      1.e. Image and recipe dont match
+    2. Week Plan recipe
+      2.1 Its not consistent recipe
+      2.2 Redundant recipes for the week - Recipes using chicken as the main ingredients is proposed 4x a week.
+      2.3 Reheat / Meals to reheat are not connected.
+  Proposed Solution: 
+    Apply the chef-planner and chef-recipe-maker skill and use in lovable to improve quality. 
+    Map those skill and the setting the user made in Yaya Gemma to generate the plan / recipe to make one cohesive recipe / plan
+  
+      
