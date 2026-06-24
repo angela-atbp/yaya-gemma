@@ -1,0 +1,119 @@
+# Yaya Gemma — Prompt Template & Instruction Standard
+
+Two templates (quick + full), a pre-send checklist, and how to organize your standing instructions so you never repeat them.
+
+---
+
+## A. The quick template (use for ~80% of requests)
+
+Paste and fill. If a line doesn't apply, delete it.
+
+> **Role:** [Lead dev / PM / Social manager / advisor]
+> **Scope:** [the ONE thing — one feature, one bug, one doc]
+> **What I already know (pinned — don't re-ask these):**
+> 1. …
+> 2. …
+> 3. …
+> **Output:** [Lovable .md / reference .docx / inline / one final copy] — for [who/what consumes it next]
+> **Before you build:** challenge anything weak or missing.
+
+---
+
+## B. The full template (use for big/expensive tasks: redesigns, audits, multi-file builds)
+
+> **Role:** […]
+> **Scope (one unit of work):** […]
+>
+> **Context / live state:**
+> - What's currently deployed or true: […]
+> - Which system/file is the live one (if duplicates exist): […]
+>
+> **The problem / goal:**
+> - Symptom or objective: […]
+> - The *decision* this output must support: […]   ← lead with this, not the deliverable name
+>
+> **Pinned decisions (treat as final, do not ask me to choose):**
+> - Numbers/limits/prices: […]
+> - Free vs premium gating: […]
+> - Canonical source doc (if conflict): […]
+> - Where I'm unsure: "you choose X, optimizing for [goal]"
+>
+> **Constraints / guardrails:**
+> - [375px / 44px touch targets / no new LLM call if X / allergy filter before scoring / Angela voice / link-yes-or-no]
+>
+> **Target files (extend, don't rewrite):** […]
+>
+> **Output format:** [one paste-ready Lovable .md with e2e tests] + [separate reference doc for any TODOs assigned to me]
+> **Naming:** businessunit_purpose_code_name_YYMMDD
+>
+> **Before you build:** diagnose/challenge first, then produce. Flag conflicts with my other AI tools or earlier decisions.
+
+---
+
+## C. Pre-send checklist (10-second scan)
+
+- [ ] **One scope?** If the request has two unrelated jobs, split or say "do part 1 only."
+- [ ] **Pinned every lever?** Any number, limit, price, count, gate, deadline, or either/or choice — is it filled in, or explicitly handed to me with a goal?
+- [ ] **Everything I already know is in turn one?** No saving tweaks for later messages.
+- [ ] **Said who consumes the output?** (Lovable / Claude Design / the team / a Facebook group / an investor.)
+- [ ] **Format stated?** File vs inline, one final version vs options.
+- [ ] **Right chat?** Is this the same unit of work as the rest of this thread, or does it need a new chat?
+- [ ] **(Marketing only)** Link-yes or link-no? How many variants?
+- [ ] **(Eng only)** What's deployed? Which file is live? Full audit or focused fix?
+
+---
+
+## D. The handoff block (use this to END a long chat cleanly)
+
+When I suggest starting fresh, ask for this before you leave:
+
+> "Give me a handoff block for the next chat: (1) what we decided, (2) what's still open, (3) which file supersedes which, (4) the exact next step."
+
+Then your **next chat's first message** = that block + the relevant file name. Context preserved, zero re-explaining.
+
+---
+
+## E. How to organize your instructions (so you stop repeating them)
+
+You have three places to put instructions. Right now some things are in the wrong layer, which is why you re-type them.
+
+**Layer 1 — Project instructions / skills (set once, always on).**
+Things that are TRUE EVERY TIME belong here, never in a prompt:
+- Angela's voice rules, feminine grammar, sole-developer framing
+- Tech stack, URL mapping (get / app / hub)
+- File naming convention
+- The 4-step output format
+- Mobile metrics (375px, 44px)
+- FEAT-010 guardrails
+*(Most of this is already in your project — good. If you ever re-type one of these into a prompt, that's a signal it should move up to this layer.)*
+
+**Layer 2 — The prompt (this request only).**
+Things that CHANGE per task:
+- The specific scope, the pinned numbers for *this* feature, the target files, who consumes *this* output.
+
+**Layer 3 — Reference files in the project (the memory between chats).**
+Decisions and specs that outlive a chat:
+- Charter, KB, recipe engine spec, ticket register, this audit.
+- Reference them by name in new chats instead of re-explaining.
+
+**The rule of thumb:**
+> If you've typed it in **more than 2 chats**, it belongs in **Layer 1** (project instructions), not in your prompt.
+> If it's a **decision you'll need again**, it belongs in **Layer 3** (a named file), not buried in chat history.
+> Only **per-task specifics** belong in the prompt itself.
+
+---
+
+## F. Worked example — same request, before & after
+
+**Before (your typical opener, ~costs 2–3 rounds):**
+> "Improve the substitution feature for free users and make sure it doesn't cost too much in API."
+
+**After (one-shot):**
+> **Role:** Lead dev. **Scope:** substitution engine, free tier only.
+> **Live state:** FEAT-010 base is deployed; recipeTemplateMerger.ts and fuzzyMatch.ts exist.
+> **Pinned:** free tier = exactly 1 substitution; paywall text visible + non-collapsible; NO Gemini call if no local candidate found; allergy/diet filter runs BEFORE scoring.
+> **Target files (extend, don't rewrite):** recipeTemplateMerger.ts, fuzzyMatch.ts, UnlockModal.tsx, CookNowOverlay.tsx.
+> **Output:** one Lovable .md, e2e tests included.
+> **Before you build:** flag any guardrail I've contradicted.
+
+Same information you had in your head either way — but the second one ends in one response instead of three.
