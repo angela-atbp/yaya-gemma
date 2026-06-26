@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Yaya Gemma — Brand Identity System</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Bricolage+Grotesque:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  /* ── NEW PALETTE ── */
+  --clay:     #C4572A;      /* warm terracotta — urgency, warmth */
+  --clay-lt:  #F2D5C8;
+  --sage:     #3D6B52;      /* deep sage — trustworthy, calm */
+  --sage-lt:  #D6EAE0;
+  --linen:    #F5EFE6;      /* warm off-white — the kitchen table */
+  --charcoal: #1E1C1A;      /* near-black — never cold */
+  --smoke:    #6B6560;      /* muted body text */
+  --butter:   #F2C46D;      /* golden accent — the "win" moment */
+  --butter-lt:#FDF4E0;
+  --white:    #FDFAF6;
+
+  /* ── TYPOGRAPHY ── */
+  --serif:    'Cormorant Garamond', Georgia, serif;
+  --sans:     'Bricolage Grotesque', system-ui, sans-serif;
+  --mono:     'DM Mono', monospace;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: var(--sans);
+  background: var(--linen);
+  color: var(--charcoal);
+  line-height: 1.6;
+  font-size: 15px;
+}
+
+/* ── LAYOUT ── */
+.page { max-width: 1100px; margin: 0 auto; padding: 0 32px 120px; }
+
+/* ── COVER ── */
+.cover {
+  background: var(--charcoal);
+  color: var(--white);
+  padding: 80px 64px 72px;
+  margin-bottom: 0;
+  position: relative;
+  overflow: hidden;
+}
+.cover::before {
+  content: '';
+  position: absolute;
+  top: -120px; right: -120px;
+  width: 500px; height: 500px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,87,42,0.18) 0%, transparent 70%);
+}
+.cover::after {
+  content: '';
+  position: absolute;
+  bottom: -80px; left: 100px;
+  width: 340px; height: 340px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(61,107,82,0.22) 0%, transparent 70%);
+}
+.cover-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 24px;
+  position: relative; z-index: 2;
+}
+.cover h1 {
+  font-family: var(--serif);
+  font-size: clamp(52px, 7vw, 88px);
+  font-weight: 700;
+  line-height: 0.95;
+  margin-bottom: 20px;
+  position: relative; z-index: 2;
+}
+.cover h1 em {
+  font-style: italic;
+  color: var(--butter);
+}
+.cover-sub {
+  font-size: 16px;
+  color: rgba(253,250,246,0.6);
+  max-width: 480px;
+  line-height: 1.7;
+  position: relative; z-index: 2;
+}
+.cover-pills {
+  display: flex; gap: 10px; flex-wrap: wrap;
+  margin-top: 36px;
+  position: relative; z-index: 2;
+}
+.cpill {
+  font-size: 11px;
+  font-family: var(--mono);
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.14);
+  border-radius: 100px;
+  padding: 5px 14px;
+  color: rgba(253,250,246,0.75);
+  letter-spacing: 0.5px;
+}
+
+/* ── SECTION CHROME ── */
+.section { padding: 72px 0 0; }
+.sec-label {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--clay);
+  margin-bottom: 8px;
+}
+.sec-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 600;
+  line-height: 1.1;
+  margin-bottom: 8px;
+  color: var(--charcoal);
+}
+.sec-sub {
+  font-size: 14px;
+  color: var(--smoke);
+  max-width: 640px;
+  line-height: 1.7;
+  margin-bottom: 40px;
+}
+
+hr.div { border: none; border-top: 1px solid rgba(30,28,26,0.10); margin: 0; }
+
+/* ── ARCHETYPE BLOCK ── */
+.archetype-wrap {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px;
+  background: rgba(30,28,26,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.arch-card {
+  background: var(--white);
+  padding: 36px 32px;
+}
+.arch-card.dark {
+  background: var(--charcoal);
+  color: var(--white);
+}
+.arch-card.highlight {
+  background: var(--clay);
+  color: var(--white);
+}
+.arch-card.sage-bg {
+  background: var(--sage);
+  color: var(--white);
+}
+.arch-num {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  opacity: 0.5;
+  margin-bottom: 12px;
+}
+.arch-card h3 {
+  font-family: var(--serif);
+  font-size: 26px;
+  font-weight: 700;
+  line-height: 1.1;
+  margin-bottom: 10px;
+}
+.arch-card p {
+  font-size: 13px;
+  line-height: 1.7;
+  opacity: 0.8;
+}
+.arch-big {
+  font-family: var(--serif);
+  font-size: 56px;
+  font-weight: 700;
+  line-height: 1;
+  margin-bottom: 12px;
+  font-style: italic;
+}
+
+/* ── PALETTE ── */
+.palette-row {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 3px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+}
+.swatch {
+  aspect-ratio: 1 / 1.2;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 14px 12px;
+  position: relative;
+}
+.swatch-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+  line-height: 1.4;
+}
+.swatch-hex {
+  font-family: var(--mono);
+  font-size: 9px;
+  opacity: 0.7;
+}
+.swatch-role {
+  font-size: 9px;
+  margin-top: 3px;
+  opacity: 0.6;
+  line-height: 1.3;
+  font-style: italic;
+}
+
+/* ── TYPOGRAPHY ── */
+.type-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  background: rgba(30,28,26,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.type-card {
+  background: var(--white);
+  padding: 36px 32px;
+}
+.type-sample-serif {
+  font-family: var(--serif);
+  font-size: 48px;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--charcoal);
+  margin-bottom: 16px;
+}
+.type-sample-sans {
+  font-family: var(--sans);
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--charcoal);
+  margin-bottom: 16px;
+}
+.type-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--smoke);
+  margin-bottom: 8px;
+}
+.type-use {
+  font-size: 12px;
+  color: var(--smoke);
+  line-height: 1.6;
+  border-top: 1px solid rgba(30,28,26,0.08);
+  padding-top: 12px;
+  margin-top: 8px;
+}
+.type-specimen {
+  background: var(--charcoal);
+  padding: 36px 32px;
+  grid-column: 1 / -1;
+}
+.specimen-text {
+  font-family: var(--serif);
+  font-size: 38px;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--butter);
+  line-height: 1.25;
+  margin-bottom: 16px;
+}
+.specimen-body {
+  font-family: var(--sans);
+  font-size: 15px;
+  color: rgba(253,250,246,0.65);
+  max-width: 560px;
+  line-height: 1.75;
+}
+
+/* ── BRAND PERSONALITY ── */
+.trait-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  background: rgba(30,28,26,0.08);
+  border-radius: 16px;
+  overflow: hidden;
+}
+.trait-card {
+  background: var(--white);
+  padding: 32px 28px;
+}
+.trait-card:nth-child(1) { background: var(--butter-lt); }
+.trait-card:nth-child(4) { background: var(--sage-lt); }
+.trait-card:nth-child(6) { background: var(--clay-lt); }
+.trait-icon { font-size: 28px; margin-bottom: 12px; }
+.trait-name {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+.trait-desc {
+  font-size: 13px;
+  color: var(--smoke);
+  line-height: 1.65;
+}
+.trait-not {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--clay);
+  margin-top: 10px;
+  letter-spacing: 0.5px;
+}
+
+/* ── IMAGERY ── */
+.imagery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(30,28,26,0.08);
+  margin-bottom: 20px;
+}
+.img-card {
+  padding: 32px 28px;
+  background: var(--white);
+}
+.img-card.dark { background: var(--charcoal); color: var(--white); }
+.img-card.clay-bg { background: var(--clay); color: var(--white); }
+.img-card h4 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+.img-card ul {
+  list-style: none;
+  padding: 0;
+}
+.img-card ul li {
+  font-size: 13px;
+  line-height: 1.7;
+  color: inherit;
+  opacity: 0.8;
+  padding-left: 14px;
+  position: relative;
+}
+.img-card ul li::before {
+  content: '—';
+  position: absolute;
+  left: 0;
+  opacity: 0.5;
+}
+
+/* ── APP STORE SECTION ── */
+.appstore-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(30,28,26,0.08);
+}
+.as-card {
+  background: var(--white);
+  padding: 36px 32px;
+}
+.as-card.full { grid-column: 1 / -1; background: var(--charcoal); color: var(--white); }
+.as-card h4 {
+  font-family: var(--serif);
+  font-size: 20px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+.as-card p, .as-card li {
+  font-size: 13px;
+  line-height: 1.75;
+  color: var(--smoke);
+}
+.as-card.full p, .as-card.full li { color: rgba(253,250,246,0.65); }
+.tagline-block {
+  background: var(--sage);
+  border-radius: 10px;
+  padding: 20px 24px;
+  margin-bottom: 12px;
+}
+.tagline-block .tl-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(253,250,246,0.5);
+  margin-bottom: 6px;
+}
+.tagline-block .tl-text {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--white);
+  line-height: 1.2;
+}
+.tagline-block.gold { background: var(--clay); }
+.tagline-block.dark { background: var(--charcoal); }
+.as-list { list-style: none; padding: 0; }
+.as-list li {
+  padding: 10px 0;
+  border-bottom: 1px solid rgba(30,28,26,0.07);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--smoke);
+}
+.as-list li:last-child { border-bottom: none; }
+.as-list li span.num {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--clay);
+  min-width: 20px;
+  padding-top: 2px;
+}
+
+/* ── DO DON'T ── */
+.dd-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(30,28,26,0.08);
+}
+.dd-card { background: var(--white); padding: 36px 32px; }
+.dd-card.do-card { background: var(--sage-lt); }
+.dd-card.dont-card { background: #FDF0EE; }
+.dd-head {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+}
+.dd-head.do { color: var(--sage); }
+.dd-head.dont { color: #C0392B; }
+.dd-item {
+  font-size: 13px;
+  line-height: 1.7;
+  padding: 9px 0;
+  border-bottom: 1px solid rgba(30,28,26,0.07);
+  color: var(--charcoal);
+}
+.dd-item:last-child { border-bottom: none; }
+
+/* ── ICON / LOGO DIRECTION ── */
+.logo-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(30,28,26,0.08);
+}
+.logo-card {
+  background: var(--white);
+  padding: 40px 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 16px;
+}
+.logo-icon {
+  width: 88px; height: 88px;
+  border-radius: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+}
+.logo-icon.concept-a { background: var(--sage); }
+.logo-icon.concept-b { background: var(--clay); }
+.logo-icon.concept-c { background: var(--charcoal); }
+.logo-icon-text {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  font-style: italic;
+  color: white;
+  line-height: 1;
+}
+.logo-icon-mono {
+  font-family: var(--mono);
+  font-size: 20px;
+  font-weight: 500;
+  color: var(--butter);
+}
+.logo-concept-name {
+  font-family: var(--mono);
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--smoke);
+}
+.logo-concept-desc {
+  font-size: 12px;
+  color: var(--smoke);
+  line-height: 1.6;
+}
+.logo-card.recommended {
+  background: var(--butter-lt);
+  position: relative;
+}
+.recommended-badge {
+  position: absolute;
+  top: 14px; right: 14px;
+  background: var(--clay);
+  color: white;
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 1px;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+/* ── ICON SVG CONCEPTS ── */
+.icon-svg-a {
+  width: 50px; height: 50px;
+}
+
+/* ── EMOTIONAL BRIDGE ── */
+.bridge-wrap {
+  display: grid;
+  grid-template-columns: 1fr 40px 1fr;
+  gap: 3px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(30,28,26,0.08);
+  align-items: stretch;
+}
+.bridge-card { background: var(--white); padding: 32px 28px; }
+.bridge-card.user-card { background: #FDF0EE; }
+.bridge-card.brand-card { background: var(--sage-lt); }
+.bridge-arrow {
+  background: var(--charcoal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--butter);
+  font-size: 18px;
+}
+.bridge-label {
+  font-family: var(--mono);
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+  opacity: 0.6;
+}
+.bridge-item {
+  font-size: 13px;
+  padding: 7px 0;
+  border-bottom: 1px solid rgba(30,28,26,0.07);
+  line-height: 1.55;
+}
+.bridge-item:last-child { border-bottom: none; }
+
+/* ── FOOTER ── */
+.doc-footer {
+  margin-top: 80px;
+  padding: 32px 0;
+  border-top: 1px solid rgba(30,28,26,0.10);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.doc-footer-brand {
+  font-family: var(--serif);
+  font-size: 22px;
+  font-weight: 700;
+  font-style: italic;
+  color: var(--charcoal);
+}
+.doc-footer-meta {
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--smoke);
+  letter-spacing: 1px;
+  text-align: right;
+}
+
+/* ── RESPONSIVE ── */
+@media (max-width: 720px) {
+  .cover { padding: 48px 32px; }
+  .archetype-wrap, .type-grid, .trait-grid, .imagery-grid,
+  .appstore-grid, .dd-grid, .logo-grid, .bridge-wrap,
+  .palette-row { grid-template-columns: 1fr; }
+  .bridge-arrow { display: none; }
+  .type-specimen { grid-column: 1; }
+  .as-card.full { grid-column: 1; }
+}
+</style>
+</head>
+<body>
+
+<!-- ══ COVER ══════════════════════════════════════════════════════════ -->
+<div class="cover">
+  <div class="cover-label">Brand Identity System — App Store & Product Pages</div>
+  <h1>Yaya<br><em>Gemma</em></h1>
+  <p class="cover-sub">A fresh visual direction rooted in user psychology — built for the overwhelmed home cook who loves to feed people but hates watching ingredients go to waste.</p>
+  <div class="cover-pills">
+    <span class="cpill">v1.0 · May 2026</span>
+    <span class="cpill">App Store First</span>
+    <span class="cpill">EN + FR</span>
+    <span class="cpill">Confidential</span>
+  </div>
+</div>
+
+<div class="page">
+
+<!-- ══ 01 · STRATEGIC FOUNDATION ════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">01 — Strategic Foundation</div>
+  <div class="sec-title">The Emotional Brief</div>
+  <p class="sec-sub">Before any color or font is chosen, we must understand what our user feels in the moment she reaches for this app — and what she needs to feel after.</p>
+
+  <div class="bridge-wrap">
+    <div class="bridge-card user-card">
+      <div class="bridge-label">User arrives feeling…</div>
+      <div class="bridge-item">😓 Overwhelmed — "What do I even make tonight?"</div>
+      <div class="bridge-item">😔 Guilty — "I wasted those carrots again"</div>
+      <div class="bridge-item">😤 Frustrated — "I just spent €80 at the market"</div>
+      <div class="bridge-item">🌀 Decision-fatigued — too many options, none feel right</div>
+      <div class="bridge-item">⏱ Time-poor — she needs an answer, not an experience</div>
+    </div>
+    <div class="bridge-arrow">→</div>
+    <div class="bridge-card brand-card">
+      <div class="bridge-label">Yaya Gemma makes her feel…</div>
+      <div class="bridge-item">✅ Capable — "I can actually do this"</div>
+      <div class="bridge-item">🌿 Relieved — the guilt dissolves into action</div>
+      <div class="bridge-item">🧠 Smart — "I used everything, wasted nothing"</div>
+      <div class="bridge-item">🤝 Supported — like a warm, wise presence in the kitchen</div>
+      <div class="bridge-item">🏡 At home — not like she's using tech, but being helped</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 02 · BRAND ARCHETYPE ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">02 — Brand Archetype</div>
+  <div class="sec-title">The Wise Nurturer</div>
+  <p class="sec-sub">Yaya Gemma sits at the intersection of two archetypes: <em>The Caregiver</em> (warmth, support, no judgment) and <em>The Sage</em> (resourceful, quietly brilliant). This is the grandmother who never wastes a thing — and never makes you feel bad about it.</p>
+
+  <div class="archetype-wrap">
+    <div class="arch-card dark">
+      <div class="arch-num">ARCHETYPE — PRIMARY</div>
+      <div class="arch-big">The<br>Caregiver</div>
+      <p>Protective, warm, generous. She feeds people. She solves the 6pm panic without drama. She never says "you should have planned better." She just says: here's dinner.</p>
+    </div>
+    <div class="arch-card">
+      <div class="arch-num">ARCHETYPE — SECONDARY</div>
+      <div class="arch-big" style="color:var(--sage)">The<br>Sage</div>
+      <p>Quietly resourceful. Knows what the half-wilted courgette can become. Never shows off. The wisdom is in the result — a good meal from what you already had.</p>
+    </div>
+    <div class="arch-card highlight">
+      <div class="arch-num">THE BRAND IN ONE SENTENCE</div>
+      <h3>"Technology with a grandmother's heart."</h3>
+      <p>Not a recipe database. Not a meal-planner. A presence — warm and brilliant — that starts where you are, with what you have.</p>
+    </div>
+    <div class="arch-card sage-bg">
+      <div class="arch-num">WHAT COMPETITORS FEEL LIKE</div>
+      <h3>Efficient strangers.<br>Yaya feels like family.</h3>
+      <p>Tasty, Yummly, Allrecipes — they send you to the store. Yaya opens your fridge and says: "I see dinner."</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 03 · COLOUR PALETTE ════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">03 — Colour Palette</div>
+  <div class="sec-title">The Kitchen at 6pm</div>
+  <p class="sec-sub">Warm, honest, grounded. Not tech-cold, not food-delivery-red. The palette evokes a real kitchen — terracotta tiles, sage herbs, cast-iron pans, a linen tablecloth, a single candle.</p>
+
+  <div class="palette-row">
+    <div class="swatch" style="background:#C4572A; color:white;">
+      <div class="swatch-name" style="color:white;">Terracotta</div>
+      <div class="swatch-hex" style="color:rgba(255,255,255,0.7)">#C4572A</div>
+      <div class="swatch-role" style="color:rgba(255,255,255,0.6)">Primary CTA · Urgency · Rescue Alerts</div>
+    </div>
+    <div class="swatch" style="background:#3D6B52; color:white;">
+      <div class="swatch-name" style="color:white;">Deep Sage</div>
+      <div class="swatch-hex" style="color:rgba(255,255,255,0.7)">#3D6B52</div>
+      <div class="swatch-role" style="color:rgba(255,255,255,0.6)">Trust · Success · Sustainability</div>
+    </div>
+    <div class="swatch" style="background:#1E1C1A; color:white;">
+      <div class="swatch-name" style="color:white;">Charcoal</div>
+      <div class="swatch-hex" style="color:rgba(255,255,255,0.7)">#1E1C1A</div>
+      <div class="swatch-role" style="color:rgba(255,255,255,0.6)">Headlines · Depth · Night mode base</div>
+    </div>
+    <div class="swatch" style="background:#F2C46D; color:#1E1C1A;">
+      <div class="swatch-name">Golden Butter</div>
+      <div class="swatch-hex">#F2C46D</div>
+      <div class="swatch-role">Win moments · XP badges · Warmth</div>
+    </div>
+    <div class="swatch" style="background:#F5EFE6; color:#1E1C1A; border:1px solid rgba(0,0,0,0.06);">
+      <div class="swatch-name">Linen</div>
+      <div class="swatch-hex">#F5EFE6</div>
+      <div class="swatch-role">App background · Cards · Breathing room</div>
+    </div>
+    <div class="swatch" style="background:#F2D5C8; color:#1E1C1A;">
+      <div class="swatch-name">Terracotta Blush</div>
+      <div class="swatch-hex">#F2D5C8</div>
+      <div class="swatch-role">Soft alert cards · Expiry warnings</div>
+    </div>
+  </div>
+
+  <div style="background:var(--white); border-radius:14px; padding:28px 32px;">
+    <div style="font-family:var(--mono);font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--smoke);margin-bottom:16px;">Why This Palette Works for Your User</div>
+    <p style="font-size:13px;color:var(--smoke);line-height:1.8;max-width:720px;">Research shows overwhelmed users respond poorly to high-contrast tech-blue palettes — they increase cortisol (stress). Warm earth tones (terracotta, sage, cream) signal safety, home, and competence without the sterility of a clinical UI. The butter gold is reserved exclusively for win states — so every time the user sees it, it means: <em>you did something good</em>.</p>
+  </div>
+</div>
+
+<!-- ══ 04 · TYPOGRAPHY ════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">04 — Typography</div>
+  <div class="sec-title">Old Soul, Modern Voice</div>
+  <p class="sec-sub">A deliberate serif/sans pairing that balances warmth with clarity. The serif carries Yaya's wisdom. The grotesque carries her practicality. Neither competes.</p>
+
+  <div class="type-grid">
+    <div class="type-card">
+      <div class="type-meta">Display — Headlines — Taglines</div>
+      <div class="type-sample-serif">Cormorant<br><em>Garamond</em></div>
+      <p style="font-family:var(--serif);font-size:17px;color:var(--smoke);font-style:italic;margin-bottom:8px;">Dinner sorted. Nothing wasted.</p>
+      <div class="type-use">Weights: 400 Regular, 600 SemiBold, 700 Bold + Italic. Used for hero text, section headers, emotional statements, taglines. The italic adds warmth — use it for the brand name and key phrases.</div>
+    </div>
+    <div class="type-card">
+      <div class="type-meta">UI — Body — Labels — Navigation</div>
+      <div class="type-sample-sans">Bricolage<br>Grotesque</div>
+      <p style="font-family:var(--sans);font-size:14px;color:var(--smoke);margin-bottom:8px;">Cook with what you have. Love what you make.</p>
+      <div class="type-use">Weights: 300 Light, 400 Regular, 500 Medium, 600 SemiBold. Used for body copy, buttons, navigation labels, UI text, captions. Approachable geometry — feels warm, not corporate.</div>
+    </div>
+    <div class="type-specimen">
+      <p class="specimen-text">"What's in your fridge? That's tonight's dinner."</p>
+      <p class="specimen-body">Taglines and hero moments use Cormorant italic at scale. The editorial quality signals this isn't another generic app — it has a point of view. Below the hero, Bricolage Grotesque takes over: clear, efficient, warm.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 05 · BRAND PERSONALITY ════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">05 — Brand Personality</div>
+  <div class="sec-title">Six Traits. Every Touchpoint.</div>
+  <p class="sec-sub">Every word, color, and interaction should feel like one of these traits. If it doesn't — cut it.</p>
+
+  <div class="trait-grid">
+    <div class="trait-card">
+      <div class="trait-icon">🫂</div>
+      <div class="trait-name">Supportive</div>
+      <div class="trait-desc">Never lectures. Never says "you should have planned." Suggests. Enables. Celebrates the small win of using the last of the onions.</div>
+      <div class="trait-not">NOT: preachy, moralistic, guilt-inducing</div>
+    </div>
+    <div class="trait-card">
+      <div class="trait-icon">🔍</div>
+      <div class="trait-name">Resourceful</div>
+      <div class="trait-desc">Sees possibility where others see a bare fridge. Every half-used ingredient is a starting point. Waste reduction is a side effect of good cooking — not a lecture topic.</div>
+      <div class="trait-not">NOT: wasteful aesthetics, buying-forward messaging</div>
+    </div>
+    <div class="trait-card">
+      <div class="trait-icon">🌡</div>
+      <div class="trait-name">Warm</div>
+      <div class="trait-desc">Real warmth — a grandmother, not a chatbot pretending to have feelings. Soft visual language. Gentle copy. Never urgent for the sake of urgency.</div>
+      <div class="trait-not">NOT: cold, minimal-for-status, tech-bro detached</div>
+    </div>
+    <div class="trait-card">
+      <div class="trait-icon">🪨</div>
+      <div class="trait-name">Honest</div>
+      <div class="trait-desc">No manufactured FOMO. No fake countdown timers. No dark patterns. The app earns trust by telling the truth — including when an ingredient genuinely can't substitute.</div>
+      <div class="trait-not">NOT: gamified guilt, fake urgency, clickbait</div>
+    </div>
+    <div class="trait-card">
+      <div class="trait-icon">🌿</div>
+      <div class="trait-name">Sustainable</div>
+      <div class="trait-desc">Zero waste is a natural outcome, not a performance. Never preach it. Let the rescued spinach speak for itself. ESG angle is for B2B; users just want good dinner.</div>
+      <div class="trait-not">NOT: greenwashing, virtue signalling, hectoring</div>
+    </div>
+    <div class="trait-card">
+      <div class="trait-icon">⚡</div>
+      <div class="trait-name">Decisive</div>
+      <div class="trait-desc">The user is overwhelmed. Yaya is not. She cuts through the decision fatigue with a clear answer: here is what you cook tonight, here is how. No endless scroll of options.</div>
+      <div class="trait-not">NOT: feature-dumping, choice overload, indecisive</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 06 · IMAGERY DIRECTION ═════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">06 — Imagery Direction</div>
+  <div class="sec-title">Real Kitchens. Real Hands. Real Food.</div>
+  <p class="sec-sub">No food-porn perfection. No pristine marble countertops with a single sprig of thyme. Yaya's world looks like your kitchen — lived-in, warm, and real.</p>
+
+  <div class="imagery-grid">
+    <div class="img-card">
+      <h4>✅ Use This</h4>
+      <ul>
+        <li>Overhead shots of actual fridge shelves — imperfect, real</li>
+        <li>Hands cutting, stirring, plating — motion, life</li>
+        <li>Worn wooden chopping boards, ceramic bowls</li>
+        <li>Warm evening kitchen light — golden hour indoors</li>
+        <li>Steam, condensation, natural imperfection</li>
+        <li>Food in various states: raw, cooking, finished</li>
+        <li>A rescued bunch of wilting herbs becoming something beautiful</li>
+      </ul>
+    </div>
+    <div class="img-card dark">
+      <h4 style="color:white">❌ Avoid This</h4>
+      <ul>
+        <li>Perfect marble countertops & spotless kitchens</li>
+        <li>AI-generated food that looks too perfect</li>
+        <li>Styled hero shots with single garnishes</li>
+        <li>Cold white studio lighting</li>
+        <li>Unrealistic produce (no wilting = not our world)</li>
+        <li>Stock photo families with identical smiles</li>
+        <li>Thin-plate fine dining aesthetics</li>
+      </ul>
+    </div>
+    <div class="img-card clay-bg">
+      <h4>The "Rescue Moment"</h4>
+      <p style="font-size:13px;opacity:0.9;line-height:1.7;">The single most ownable visual in the Yaya universe: a slightly-wilted vegetable, or a near-empty fridge, transformed into a plated meal. This before/after is your hero shot. It is emotionally true, it is the product promise, and it stops the scroll.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 07 · APP STORE ASSETS ══════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">07 — App Store Assets</div>
+  <div class="sec-title">What Goes Where</div>
+  <p class="sec-sub">App store pages are your brand's most-seen real estate. Every frame is a micro-pitch to someone who has 8 seconds of attention.</p>
+
+  <div class="appstore-grid">
+    <div class="as-card">
+      <h4>App Icon Direction</h4>
+      <p style="margin-bottom:16px;">The icon must read at 60×60px and communicate "food + intelligence + warmth" without a single word.</p>
+      <p><strong>Recommended concept:</strong> A stylised open pot or bowl shape — viewed from a slight angle — on a deep terracotta background. The steam forms a subtle leaf or spark shape. No text. No chef's hat (too generic).</p>
+      <p style="margin-top:12px;"><strong>Background:</strong> Terracotta <code style="font-family:var(--mono);font-size:11px;background:var(--clay-lt);padding:1px 5px;border-radius:3px;">#C4572A</code></p>
+      <p style="margin-top:6px;"><strong>Foreground:</strong> Linen white <code style="font-family:var(--mono);font-size:11px;background:var(--linen);padding:1px 5px;border-radius:3px;">#F5EFE6</code></p>
+    </div>
+    <div class="as-card" style="background:var(--linen)">
+      <h4>App Name & Subtitle</h4>
+      <p style="margin-bottom:16px;">App stores allow 30 chars for name, 30 for subtitle. Use every character.</p>
+      <div style="background:var(--white);border-radius:10px;padding:16px 20px;margin-bottom:10px;">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--smoke);margin-bottom:6px;">App Name (30 chars)</div>
+        <div style="font-family:var(--serif);font-size:18px;font-weight:700;">Yaya Gemma</div>
+      </div>
+      <div style="background:var(--white);border-radius:10px;padding:16px 20px;">
+        <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--smoke);margin-bottom:6px;">Subtitle (iOS) / Short description (Android)</div>
+        <div style="font-family:var(--sans);font-size:14px;font-weight:500;">Cook what you have. Waste nothing.</div>
+      </div>
+    </div>
+    <div class="as-card full">
+      <h4>Taglines by Screen Slot</h4>
+      <p style="margin-bottom:20px;">App store screenshots are read like a mini pitch deck. Each screen's caption should build on the last.</p>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+        <div class="tagline-block">
+          <div class="tl-label">Screenshot 1 — Hero</div>
+          <div class="tl-text">Dinner sorted. Nothing wasted.</div>
+        </div>
+        <div class="tagline-block gold">
+          <div class="tl-label">Screenshot 2 — Problem</div>
+          <div class="tl-text">No more 6pm panic.</div>
+        </div>
+        <div class="tagline-block dark">
+          <div class="tl-label">Screenshot 3 — Product</div>
+          <div class="tl-text">Every other app starts with a recipe. We start with your fridge.</div>
+        </div>
+        <div class="tagline-block" style="background:var(--charcoal)">
+          <div class="tl-label">Screenshot 4 — Rescue</div>
+          <div class="tl-text">Rescue alerts before food goes to waste.</div>
+        </div>
+        <div class="tagline-block" style="background:#1E1C1A">
+          <div class="tl-label">Screenshot 5 — Social proof</div>
+          <div class="tl-text">Cook with what you have. Love what you make.</div>
+        </div>
+        <div class="tagline-block" style="background:var(--sage)">
+          <div class="tl-label">Screenshot 6 — CTA</div>
+          <div class="tl-text">Your fridge. Your rules. Zero waste.</div>
+        </div>
+      </div>
+    </div>
+    <div class="as-card">
+      <h4>App Store Description — First 3 Lines</h4>
+      <p style="margin-bottom:14px;">Only the first 3 lines show before "more" — these must hook immediately.</p>
+      <div style="background:var(--linen);border-left:3px solid var(--clay);padding:14px 18px;border-radius:0 8px 8px 0;font-size:13px;line-height:1.8;color:var(--charcoal);">
+        Stop buying ingredients you already have.<br>
+        Yaya Gemma looks at what's in your fridge and tells you what to cook tonight — nothing wasted, nothing bought.<br>
+        Because dinner shouldn't start with a shopping trip.
+      </div>
+    </div>
+    <div class="as-card">
+      <h4>Rating & Review Asks</h4>
+      <ul class="as-list">
+        <li><span class="num">01</span>Trigger the review prompt after a "Rescue Cook" — when the user cooks something that was about to expire. Highest satisfaction moment.</li>
+        <li><span class="num">02</span>Never ask on first launch or during onboarding. Wait for the first cooking completion.</li>
+        <li><span class="num">03</span>In-app review copy: "You just rescued dinner 🍳 — would you tell others?" (Yaya voice, never corporate)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 08 · ICON / LOGO CONCEPTS ══════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">08 — App Icon Concepts</div>
+  <div class="sec-title">Three Directions to Explore</div>
+  <p class="sec-sub">Each concept is a distinct strategic bet. Present to stakeholders and test with target users before committing.</p>
+
+  <div class="logo-grid">
+    <div class="logo-card recommended">
+      <div class="recommended-badge">Recommended</div>
+      <div class="logo-icon concept-a">
+        <span style="font-size:40px;">🪴</span>
+      </div>
+      <div>
+        <div class="logo-concept-name">Concept A — "The Sprig"</div>
+        <div class="logo-concept-desc" style="margin-top:6px;">A single illustrated herb sprig — rosemary or sage — on deep sage green. Organic, hand-drawn line quality. Signals: fresh, natural, resourceful. Reads beautifully small. Unique in the food app space (not a fork, not a chef's hat).</div>
+        <div style="margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--sage);">BACKGROUND: #3D6B52 · ICON: #F5EFE6</div>
+      </div>
+    </div>
+    <div class="logo-card">
+      <div class="logo-icon concept-b">
+        <span style="font-size:36px">🫙</span>
+      </div>
+      <div>
+        <div class="logo-concept-name">Concept B — "The Jar"</div>
+        <div class="logo-concept-desc" style="margin-top:6px;">A simple illustrated preserving jar — the symbol of keeping, storing, not wasting. On terracotta. References the grandmother metaphor directly. Risk: slightly too artisanal, may read as a recipe blog icon.</div>
+        <div style="margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--clay);">BACKGROUND: #C4572A · ICON: #F5EFE6</div>
+      </div>
+    </div>
+    <div class="logo-card">
+      <div class="logo-icon concept-c">
+        <div class="logo-icon-text">yg</div>
+      </div>
+      <div>
+        <div class="logo-concept-name">Concept C — "The Monogram"</div>
+        <div class="logo-concept-desc" style="margin-top:6px;">Italic serif "yg" ligature in Cormorant on deep charcoal. Sophisticated, editorial. Works when the brand is already known — but may not communicate food/kitchen clearly at a glance in crowded app stores.</div>
+        <div style="margin-top:12px;font-family:var(--mono);font-size:9px;letter-spacing:1px;color:var(--smoke);">BACKGROUND: #1E1C1A · ICON: #F2C46D</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 09 · DO / DON'T ════════════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">09 — Brand Rules</div>
+  <div class="sec-title">Do & Don't</div>
+  <p class="sec-sub">These are non-negotiable. Any asset — screenshot, social post, email header — that violates a "don't" breaks the brand.</p>
+
+  <div class="dd-grid">
+    <div class="dd-card do-card">
+      <div class="dd-head do">✓ Always Do</div>
+      <div class="dd-item">Lead with the user's problem, not the product feature</div>
+      <div class="dd-item">Use Cormorant italic for emotional hero moments</div>
+      <div class="dd-item">Let terracotta signal action; sage signal trust</div>
+      <div class="dd-item">Show real, imperfect food and real kitchens</div>
+      <div class="dd-item">Reserve golden butter exclusively for win/success states</div>
+      <div class="dd-item">Keep copy short — Yaya speaks in sentences, not paragraphs</div>
+      <div class="dd-item">Use "you" and "your fridge" — make it personal</div>
+      <div class="dd-item">Celebrate rescue moments visually and verbally</div>
+    </div>
+    <div class="dd-card dont-card">
+      <div class="dd-head dont">✗ Never Do</div>
+      <div class="dd-item">Use green gradients on white — it looks like every other food app</div>
+      <div class="dd-item">Use Inter, Roboto, or system fonts for display text</div>
+      <div class="dd-item">Show perfect food-porn imagery — it alienates the overwhelmed user</div>
+      <div class="dd-item">Use sustainability/zero-waste as the headline — it's a side effect, not the pitch</div>
+      <div class="dd-item">Use red for anything except genuine danger/expiry states</div>
+      <div class="dd-item">Write more than 2 sentences of body copy before the first CTA</div>
+      <div class="dd-item">Use the word "AI" in hero copy — users want dinner, not a tech pitch</div>
+      <div class="dd-item">Compete with the user's attention — remove everything non-essential</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ 10 · VOICE IN APP STORE ════════════════════════════════════════ -->
+<div class="section">
+  <div class="sec-label">10 — Voice Quick-Reference</div>
+  <div class="sec-title">How Yaya Speaks</div>
+  <p class="sec-sub">For app store copy, push notifications, and screenshot captions — the voice must be consistent across EN and FR.</p>
+
+  <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:3px;border-radius:16px;overflow:hidden;background:rgba(30,28,26,0.08);">
+    <div style="background:var(--white);padding:28px 24px;">
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--smoke);margin-bottom:14px;">Warm · Direct · No Waffle</div>
+      <div style="font-family:var(--serif);font-size:17px;font-weight:600;color:var(--sage);margin-bottom:8px;">✓ Write this</div>
+      <p style="font-size:13px;color:var(--charcoal);line-height:1.7;">"Open your fridge. We'll handle dinner."</p>
+      <p style="font-size:13px;color:var(--charcoal);line-height:1.7;margin-top:8px;">"That spinach has 2 days left. Here's what to make."</p>
+    </div>
+    <div style="background:#FDF0EE;padding:28px 24px;">
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:var(--smoke);margin-bottom:14px;">Cold · Corporate · Vague</div>
+      <div style="font-family:var(--serif);font-size:17px;font-weight:600;color:#C0392B;margin-bottom:8px;">✗ Avoid this</div>
+      <p style="font-size:13px;color:var(--charcoal);line-height:1.7;">"Leverage AI-powered culinary intelligence to optimise your pantry utilisation."</p>
+      <p style="font-size:13px;color:var(--charcoal);line-height:1.7;margin-top:8px;">"Our innovative solution helps reduce food waste through machine learning."</p>
+    </div>
+    <div style="background:var(--charcoal);padding:28px 24px;">
+      <div style="font-family:var(--mono);font-size:9px;letter-spacing:2px;text-transform:uppercase;color:rgba(253,250,246,0.4);margin-bottom:14px;">The Yaya Test</div>
+      <div style="font-family:var(--serif);font-size:17px;font-weight:600;font-style:italic;color:var(--butter);margin-bottom:8px;">Would Yaya say it?</div>
+      <p style="font-size:13px;color:rgba(253,250,246,0.65);line-height:1.7;">Before publishing any copy, ask: would a warm, wise grandmother — who happens to know exactly what's in your fridge — say this? If it sounds like a startup pitch deck, rewrite it.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ══ FOOTER ══════════════════════════════════════════════════════════ -->
+<div class="doc-footer">
+  <div class="doc-footer-brand">Yaya Gemma</div>
+  <div class="doc-footer-meta">
+    Brand Identity System v1.0<br>
+    App Store & Product Pages · May 2026 · Confidential
+  </div>
+</div>
+
+</div><!-- /page -->
+</body>
+</html>
