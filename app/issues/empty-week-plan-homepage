@@ -1,0 +1,64 @@
+# BUG FIX — Empty Week Plan Homepage: "Generate a Recipe" UX
+
+## Context
+When a user's current week plan is empty, the homepage shows two options: (1) "Generate a Recipe" and (2) "Plan my week". The "Plan my week" flow is correct. The "Generate a Recipe" flow has two UX bugs. Do NOT rewrite the homepage or the recipe generation engine — extend existing components only.
+
+---
+
+## Issue #1 — Generic loading state during recipe generation
+
+**Current behavior:** Tapping "✨ Generate a Recipe" shows a generic inline spinner ("Cooking up a recipe…") on the dimmed button while the recipe generates.
+
+**Expected behavior:** Show the same step-by-step AI narration loading design already used by the weekly plan flow ("Planning your week — Usually under a minute" with sequential checklist steps: reading, looking at fridge, keeping it safe and seasonal, etc.).
+
+**Implementation:**
+1. Locate the existing "Planning your week" loading component (the stepper with animated check circles used when generating a weekly plan).
+2. Extract it into a reusable component if it is not already reusable (e.g., `AiProgressLoader`), accepting a `title`, `subtitle`, and an ordered `steps` array. Do not change its visual design.
+3. Use it for single recipe generation with these steps (EN, with FR equivalents pulled from the existing i18n pattern):
+   - Title: "Cooking up your recipe" / Subtitle: "Usually under 30 seconds"
+   - Step 1: "Looking at what's in your fridge… 🧺"
+   - Step 2: "Keeping it safe and seasonal 🌿"
+   - Step 3: "Matching your taste and energy today ⚡"
+   - Step 4: "Plating up your dinner… 🍽️"
+4. Steps advance on a timed sequence tied to the actual request lifecycle: final step must only complete when the API response has arrived. If the request finishes early, fast-forward remaining steps; if it errors, show the existing error handling.
+5. The loader replaces the CTA area content on the homepage (full-width panel), not a modal. Respect mobile-first: 375px baseline viewport, all interactive targets ≥ 44×44px.
+
+---
+
+## Issue #2 — Post-generation homepage shows bare recipe view
+
+**Current behavior:** Once the recipe is generated, the homepage renders a plain recipe detail block (title, ingredients, steps) with no imagery, no completion rate, no actions.
+
+**Expected behavior:** After generation, the homepage must render the STANDARD homepage state for a day with a planned recipe, exactly like the existing design:
+- Hero recipe image
+- Recipe title + key ingredient chips
+- Time + servings row
+- "Fresh in your pantry" completion/match bar (e.g., "2 of 3", "1 to grab — already on your list 🛒")
+- Primary CTA: "Cook Now"
+- Secondary action: "🍴 Not feeling this tonight?"
+
+**Implementation:**
+1. Locate the existing standard homepage day-recipe card component (the one shown when today has a planned recipe). Reuse it as-is — do not build a new card.
+2. On successful generation, persist the generated recipe as today's entry in the user's current week plan (single-day entry, same tables/shape the weekly plan flow writes), then render the standard homepage state from that persisted data. The card must survive a page refresh.
+3. If hero image generation is asynchronous, show the card immediately with the existing image placeholder/skeleton used elsewhere in the app, swapping in the image when ready.
+4. "Cook Now" and "Not feeling this tonight?" must use the existing handlers (cook flow, substitution/regeneration flow) — no new logic paths.
+5. Diet and allergy profile filtering from the Supabase profiles table must run BEFORE generation, exactly as in the weekly plan flow. Never bypass it for single recipes.
+
+---
+
+## Acceptance criteria
+1. Empty week homepage → tap "Generate a Recipe" → stepper loader appears (no generic spinner anywhere in the flow).
+2. Loader steps animate sequentially; last step completes only when generation succeeds.
+3. On success, homepage shows the standard day-recipe card with image, match bar, Cook Now, and "Not feeling this tonight?".
+4. Refreshing the page after generation still shows the recipe card (persisted as today's plan entry).
+5. Generation failure shows the existing error state and returns the user to the empty-week homepage with both CTAs intact.
+6. Weekly plan flow ("Plan my week") is completely unaffected — zero regressions.
+7. All new/changed UI verified at 375px width; touch targets ≥ 44×44px.
+
+## Tests (required)
+Add programmatic e2e tests covering:
+- `empty week + generate recipe → stepper loader visible, generic spinner absent`
+- `generation success → standard recipe card rendered with Cook Now + Not feeling this`
+- `generation success → today's plan entry persisted; reload → card still rendered`
+- `generation failure → error state shown, empty-week CTAs restored`
+- `weekly plan flow smoke test → unchanged behavior`
