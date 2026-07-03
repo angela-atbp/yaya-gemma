@@ -1,0 +1,68 @@
+# Deep Trace Logging — angelap.poulain@gmail.com
+
+Goal: capture every meaningful interaction of a single QA user so we can find gaps in existing analytics. Zero effect on all other users.
+
+## Scope
+
+- Hard-coded to the auth.users.id resolved from `angelap.poulain@gmail.com` (looked up once, stored as a constant in `src/lib/deepTrace.ts`).
+- A single guard `isDeepTraceUser(userId)` short-circuits everything for anyone else — no listeners attached, no rows inserted.
+
+## What we capture
+
+One new table `public.deep_trace_events` with per-row fields:
+
+- `id`, `user_id`, `session_id` (from `sessionManager`), `occurred_at` (default `now()`)
+- `kind`: one of `page_view`, `page_exit`, `click`, `feature_start`, `feature_success`, `feature_error`
+- `path` (route), `page_title`
+- `target_label` (visible text, trimmed, max 120 chars), `target_role` (button/link/etc), `target_tag`, `target_testid`
+- `feature` (nearest `data-feature="..."` ancestor, else derived from route)
+- `duration_ms` (for `page_exit` and `feature_*` outcomes)
+- `success` (boolean, nullable)
+- `error_message` (nullable, sanitized, max 500 chars)
+- `metadata` (jsonb — extras like href, viewport, etc.)
+
+RLS: only the user themselves and admins can read. Inserts allowed for `authenticated` where `user_id = auth.uid()`. Standard GRANTs.
+
+## How we capture
+
+1. **Bootstrap** — `src/App.tsx` mounts a `<DeepTraceProvider/>` that:
+   - Reads current user id, exits if not the QA user.
+   - Attaches a single `document.addEventListener('click', ..., { capture: true })` — captures every `<button>`, `<a>`, `[role=button]`, `[role=link]` click. Walks up to find `data-feature`, `data-testid`, and the click target's accessible label (aria-label → visible text → title).
+   - Attaches `visibilitychange` + `focus`/`blur` handlers; maintains a `visibleMs` accumulator per route. Flushes as `page_exit` on route change / tab hide / unload (via `sendBeacon` fallback insert).
+
+2. **Page views (eye-on-device)** — hook into the existing `usePageViewTracking` layer (`src/hooks/useAnalyticsTracking.ts`) but write to `deep_trace_events` instead of `page_events`. Only start the timer when `document.visibilityState === 'visible'` AND `document.hasFocus()`. Pause on blur/hide, resume on focus/show. `page_view` row on entry, `page_exit` row on leave with accumulated `duration_ms`.
+
+3. **Load success per route** — a lightweight `useDeepTraceLoad(feature)` hook usable in page components. But because we want zero per-page work, we use the auto path:
+   - Emit `feature_start` at route mount.
+   - Subscribe to the React Query cache (`queryClient.getQueryCache().subscribe`) and, for queries whose key's first segment matches a small route→queryKey map (`/pantry` → `inventory`, `/ma-semaine` → `week-plan`, `/grocery-list` → `grocery`, `/recipes` → `recipes`, `/` → `assembly-meal`, `/vacation` → `vacation-context`, etc.), emit `feature_success` on first `success` state (with `duration_ms` since mount) or `feature_error` on `error`.
+   - Route→query map lives in `src/lib/deepTrace.ts`; unknown routes fall back to a 3s "mounted without error" heuristic.
+
+4. **Explicit CTA outcomes** — the global click handler already records the click. Success/error of the triggered feature is covered by (3). No component changes required for v1.
+
+## Files
+
+**New**
+- `src/lib/deepTrace.ts` — constants (QA user id, route→feature map), `isDeepTraceUser`, `logDeepTrace()` writer (batched, 2s flush, `sendBeacon` on unload).
+- `src/components/DeepTraceProvider.tsx` — mounts once from `App.tsx`; wires click listener, visibility timer, route listener, React Query cache subscription.
+- `supabase/migrations/<ts>_deep_trace_events.sql` — table + GRANTs + RLS + indexes on `(user_id, occurred_at desc)` and `(user_id, kind, occurred_at desc)`.
+
+**Edited**
+- `src/App.tsx` — mount `<DeepTraceProvider/>` inside the auth-aware tree (after `AuthProvider`, alongside existing tracking).
+
+**Untouched** — no changes to existing `page_events`, `user_events`, `trackUserEvent`, or any feature component. Rollback = drop the provider mount + the table.
+
+## How you read it
+
+A follow-up (not in this plan) can add an Admin page tab that queries `deep_trace_events` for the QA user grouped by day/route. For now the raw table + `supabase--read_query` is enough to spot gaps.
+
+## Technical notes
+
+- Batching: events queued in-memory, flushed every 2s or on 20 events or on `visibilitychange=hidden` via `navigator.sendBeacon` to a tiny edge function (`log-deep-trace`) that inserts with the service role. Reason: `sendBeacon` can't carry the user JWT reliably, and we want the tab-close exit event to actually land. Function validates the payload's `user_id` matches the hard-coded QA id — no other user can spam it.
+- PII: `target_label` is truncated and stripped of anything that looks like an email; `metadata` never carries free-form input.
+- Cost: single user, ~few thousand rows/day max. Trivial.
+
+## Out of scope
+
+- Dashboards / heatmaps (raw SQL for now).
+- Backfill of past activity.
+- Extending to other QA users (structure supports it via the constants file, but the plan ships as hard-coded).
