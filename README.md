@@ -23,6 +23,10 @@ your-project-repo/
 │   └── glossary.md ----------------- # list of terms and definition
 |
 ├── app/----------------------------- # Yaya Gemma's App Feature UI/UX esign and Value Proposition
+│   ├── ai-skills/------------------- # blueprint for the AI Chef, its system instructions, quality checks, and success metrics
+│   │   ├── chef-planner.md---------- # ai that generates weekly recipe plan
+│   │   └── chef-recipe-maker.md----- # ai that generates single recipe either based on what chef-planner has planned or single adhoc
+|   |
 │   ├── pages/----------------------- # Client-Side (The Frontend / UI)
 │   │   ├── home.md
 │   │   ├── my-week.md
